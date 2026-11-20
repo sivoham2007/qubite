@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, Flame, Utensils, Check, X, Sparkles } from "lucide-react";
 import { Menu, MealType } from "@/lib/types/database";
 import { FOOD_IMAGES } from "@/lib/data/mess-store";
+import { resolveDishImage } from "@/lib/data/dish-images";
 import { DishImageBadge } from "@/components/shared/dish-image-badge";
 import { formatTime } from "@/lib/utils";
 import {
@@ -101,7 +102,10 @@ export function TodaysMenuCard({ menus }: TodaysMenuCardProps) {
           {mealKeys.map((type) => {
             const meal = getMealMenu(type);
             const meta = FOOD_IMAGES[type];
-            const heroImage = meal.items?.[0]?.image_url || meal.image_url || meta.url;
+            const primaryDish = meal.items?.[0];
+            const heroImage = primaryDish
+              ? resolveDishImage(primaryDish.name, primaryDish.image_url, primaryDish.category)
+              : resolveDishImage(type, meal.image_url || meta.url);
             const mealTitle = meal.items && meal.items.length > 0 ? meal.items.map(i => i.name).slice(0, 2).join(" + ") : meta.desc;
 
             return (
@@ -185,7 +189,11 @@ export function TodaysMenuCard({ menus }: TodaysMenuCardProps) {
             <div className="space-y-4 py-2">
               <div className="h-44 w-full rounded-2xl overflow-hidden">
                 <img
-                  src={selectedMeal.items?.[0]?.image_url || selectedMeal.image_url || FOOD_IMAGES[selectedMeal.meal_type]?.url}
+                  src={
+                    selectedMeal.items?.[0]
+                      ? resolveDishImage(selectedMeal.items[0].name, selectedMeal.items[0].image_url, selectedMeal.items[0].category)
+                      : resolveDishImage(selectedMeal.meal_type, selectedMeal.image_url || FOOD_IMAGES[selectedMeal.meal_type]?.url)
+                  }
                   alt={selectedMeal.items?.[0]?.name || selectedMeal.meal_type}
                   className="w-full h-full object-cover"
                 />

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { getAllMenus, FOOD_IMAGES } from "@/lib/data/mess-store";
+import { resolveDishImage } from "@/lib/data/dish-images";
 import { formatTime } from "@/lib/utils";
 import { Clock, Flame, Sparkles, Check, X, Calendar as CalendarIcon, Info } from "lucide-react";
 import { submitMealPlanAction } from "@/app/actions/meal-plan-actions";
@@ -27,27 +28,48 @@ export default function StudentWeeklyMenuPage() {
           new Date(m.menu_date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" }) === dayName
       );
 
-      return (
-        match || {
-          id: `menu-${dayName}-${type}`,
-          menu_date: new Date().toISOString().split("T")[0],
-          meal_type: type,
-          cutoff_time: type === "breakfast" ? "06:00:00" : type === "lunch" ? "10:00:00" : type === "snacks" ? "15:30:00" : "17:00:00",
-          serving_start_time: type === "breakfast" ? "07:30:00" : type === "lunch" ? "12:30:00" : type === "snacks" ? "17:00:00" : "19:30:00",
-          serving_end_time: type === "breakfast" ? "09:30:00" : type === "lunch" ? "14:30:00" : type === "snacks" ? "18:00:00" : "21:30:00",
-          is_published: true,
-          image_url: meta.url,
-          calories: meta.calories,
-          special_badge: type === "dinner" && dayName === "Sunday" ? "Grand Feast" : type === "dinner" ? "Chef's Special" : undefined,
-          items: [
-            { id: "1", menu_id: "m", name: meta.desc.split("+")[0]?.trim() || "Main", category: "main" as const, is_vegetarian: true, image_url: meta.url, description: meta.desc, created_at: "" },
-            { id: "2", menu_id: "m", name: meta.desc.split("+")[1]?.trim() || "Accompaniment", category: "side" as const, is_vegetarian: true, image_url: meta.url, description: meta.desc, created_at: "" },
-          ],
-          expected_attendance: 18,
-          created_at: "",
-          updated_at: "",
-        }
-      );
+      if (match) return match;
+
+      const item1Name = meta.desc.split("+")[0]?.trim() || "Main Serving";
+      const item2Name = meta.desc.split("+")[1]?.trim() || "Accompaniment";
+
+      return {
+        id: `menu-${dayName}-${type}`,
+        menu_date: new Date().toISOString().split("T")[0],
+        meal_type: type,
+        cutoff_time: type === "breakfast" ? "06:00:00" : type === "lunch" ? "10:00:00" : type === "snacks" ? "15:30:00" : "17:00:00",
+        serving_start_time: type === "breakfast" ? "07:30:00" : type === "lunch" ? "12:30:00" : type === "snacks" ? "17:00:00" : "19:30:00",
+        serving_end_time: type === "breakfast" ? "09:30:00" : type === "lunch" ? "14:30:00" : type === "snacks" ? "18:00:00" : "21:30:00",
+        is_published: true,
+        image_url: resolveDishImage(item1Name, null, "main"),
+        calories: meta.calories,
+        special_badge: type === "dinner" && dayName === "Sunday" ? "Grand Feast" : type === "dinner" ? "Chef's Special" : undefined,
+        items: [
+          {
+            id: "1",
+            menu_id: "m",
+            name: item1Name,
+            category: "main" as const,
+            is_vegetarian: true,
+            image_url: resolveDishImage(item1Name, null, "main"),
+            description: meta.desc,
+            created_at: "",
+          },
+          {
+            id: "2",
+            menu_id: "m",
+            name: item2Name,
+            category: (type === "snacks" ? "snack" : "side") as any,
+            is_vegetarian: true,
+            image_url: resolveDishImage(item2Name, null, type === "snacks" ? "snack" : "side"),
+            description: meta.desc,
+            created_at: "",
+          },
+        ],
+        expected_attendance: 18,
+        created_at: "",
+        updated_at: "",
+      };
     });
   };
 
@@ -104,7 +126,10 @@ export default function StudentWeeklyMenuPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {dayMeals.map((meal) => {
           const meta = FOOD_IMAGES[meal.meal_type];
-          const heroImage = meal.items?.[0]?.image_url || meal.image_url || meta.url;
+          const primaryDish = meal.items?.[0];
+          const heroImage = primaryDish
+            ? resolveDishImage(primaryDish.name, primaryDish.image_url, primaryDish.category)
+            : resolveDishImage(meal.meal_type, meal.image_url || meta.url);
           const mealTitle = meal.items && meal.items.length > 0 ? meal.items.map(i => i.name).slice(0, 2).join(" + ") : meta.desc;
 
           return (

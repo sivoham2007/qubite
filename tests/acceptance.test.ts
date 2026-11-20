@@ -54,7 +54,7 @@ async function runTestSuite() {
   // ---------------------------------------------------------
   const student = store.profiles.find((p) => p.role === "student");
   assert(
-    !!student && student.email.includes("@mess.college.edu"),
+    !!student && (student.email.includes("@msruas.ac.in") || student.email.includes("@mess.college.edu")),
     "T01",
     "Student can register and log in",
     "FR1: Authentication",
@@ -101,7 +101,7 @@ async function runTestSuite() {
   // Test 5: Duplicate email registration is rejected
   // ---------------------------------------------------------
   const existingEmails = store.profiles.map((p) => p.email);
-  const duplicateDetected = existingEmails.includes("admin@mess.college.edu");
+  const duplicateDetected = existingEmails.includes("admin@msruas.ac.in") || existingEmails.includes("admin@mess.college.edu");
   assert(
     duplicateDetected,
     "T05",

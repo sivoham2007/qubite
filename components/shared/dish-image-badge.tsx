@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { resolveDishImage, CATEGORY_FALLBACKS } from "@/lib/data/dish-images";
+import { resolveDishImage, getDishCdnFallback, CATEGORY_FALLBACKS } from "@/lib/data/dish-images";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Utensils, Sparkles, ZoomIn } from "lucide-react";
 
@@ -28,16 +28,30 @@ export function DishImageBadge({
 }: DishImageBadgeProps) {
   const [open, setOpen] = useState(false);
   const [currentUrl, setCurrentUrl] = useState(() => resolveDishImage(name, imageUrl, category));
-  const [fallbackAttempted, setFallbackAttempted] = useState(false);
+  const [fallbackStage, setFallbackStage] = useState(0);
   const [imgError, setImgError] = useState(false);
 
   const handleImageError = () => {
-    if (!fallbackAttempted && category && CATEGORY_FALLBACKS[category]) {
-      setFallbackAttempted(true);
-      setCurrentUrl(CATEGORY_FALLBACKS[category]);
-    } else {
-      setImgError(true);
+    if (fallbackStage === 0) {
+      // Stage 1: Try culinary CDN fallback for this exact dish
+      setFallbackStage(1);
+      const cdnUrl = getDishCdnFallback(name, category);
+      if (cdnUrl && cdnUrl !== currentUrl) {
+        setCurrentUrl(cdnUrl);
+        return;
+      }
     }
+    if (fallbackStage <= 1 && category && CATEGORY_FALLBACKS[category]) {
+      // Stage 2: Try category fallback
+      setFallbackStage(2);
+      const catUrl = CATEGORY_FALLBACKS[category];
+      if (catUrl && catUrl !== currentUrl) {
+        setCurrentUrl(catUrl);
+        return;
+      }
+    }
+    // Stage 3: Render graceful UI icon
+    setImgError(true);
   };
 
   const sizeClasses = {
@@ -111,6 +125,7 @@ export function DishImageBadge({
               <img
                 src={currentUrl}
                 alt={name}
+                onError={handleImageError}
                 className="w-full h-full object-cover"
               />
               <div className="absolute top-3 left-3 flex gap-2">

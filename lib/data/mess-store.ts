@@ -659,6 +659,7 @@ export function updateMenuInStore(
       description: item.description,
       category: item.category,
       is_vegetarian: item.is_vegetarian,
+      image_url: resolveDishImage(item.name, (item as any).image_url, item.category),
       created_at: new Date().toISOString(),
     });
   });

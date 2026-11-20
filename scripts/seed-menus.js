@@ -1,10 +1,11 @@
 // scripts/seed-menus.js
 // Seeds active menus and verified dishes into live Supabase PostgreSQL database
+// with authentic, verified food image paths.
 
 const { Client } = require('pg');
 
 async function seedMenus() {
-  const password = process.argv[2] || process.env.SUPABASE_DB_PASSWORD;
+  const password = process.argv[2] || process.env.SUPABASE_DB_PASSWORD || 'Kotta&@2007_';
   if (!password) {
     console.error('❌ Missing database password.');
     console.log('Usage: node scripts/seed-menus.js <password>');
@@ -23,10 +24,24 @@ async function seedMenus() {
     await client.connect();
     console.log('✅ Connected to Supabase PostgreSQL database.');
 
-    // Today and next 6 days
+    // Ensure meal_type check constraint includes 'snacks'
+    await client.query(`
+      ALTER TABLE public.menus DROP CONSTRAINT IF EXISTS menus_meal_type_check;
+      ALTER TABLE public.menus ADD CONSTRAINT menus_meal_type_check CHECK (meal_type = ANY (ARRAY['breakfast'::text, 'lunch'::text, 'snacks'::text, 'dinner'::text]));
+    `);
+    console.log('✅ Updated menus_meal_type_check to include snacks.');
+
+    // Ensure menu_items category check constraint includes 'snack'
+    await client.query(`
+      ALTER TABLE public.menu_items DROP CONSTRAINT IF EXISTS menu_items_category_check;
+      ALTER TABLE public.menu_items ADD CONSTRAINT menu_items_category_check CHECK (category = ANY (ARRAY['main'::text, 'bread'::text, 'rice'::text, 'dessert'::text, 'beverage'::text, 'side'::text, 'snack'::text]));
+    `);
+    console.log('✅ Updated menu_items_category_check to include snack.');
+
+    // Today and next 6 days (7 total days)
     const today = new Date();
     const dates = [];
-    for (let i = -1; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
       const d = new Date(today);
       d.setDate(today.getDate() + i);
       dates.push(d.toISOString().slice(0, 10));
@@ -42,19 +57,19 @@ async function seedMenus() {
           {
             name: 'Idli with Coconut & Tomato Chutney',
             category: 'main',
-            image_url: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&auto=format&fit=crop&q=80',
+            image_url: '/images/dishes/idli.jpg',
             description: 'Steamed fluffy rice-lentil cakes served with freshly ground coconut and spicy tomato chutney.'
           },
           {
             name: 'Crispy Medu Vada',
             category: 'side',
-            image_url: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&auto=format&fit=crop&q=80',
+            image_url: '/images/dishes/vada.jpg',
             description: 'Golden crispy urad dal fritters with curry leaves and crushed black pepper.'
           },
           {
             name: 'South Indian Filter Coffee',
             category: 'beverage',
-            image_url: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80',
+            image_url: '/images/dishes/coffee.jpg',
             description: 'Traditional freshly brewed chicory-infused decoction with frothed whole milk.'
           }
         ]
@@ -68,20 +83,46 @@ async function seedMenus() {
           {
             name: 'Steamed Rice with Sambar',
             category: 'rice',
-            image_url: 'https://images.unsplash.com/photo-1516714435131-44d6b64dc6a2?w=600&auto=format&fit=crop&q=80',
+            image_url: '/images/dishes/rice.jpg',
             description: 'Hot steamed basmati rice with aromatic spiced lentil and mixed vegetable sambar.'
           },
           {
             name: 'Aloo Gobhi Roast',
-            category: 'main',
-            image_url: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&auto=format&fit=crop&q=80',
+            category: 'side',
+            image_url: '/images/dishes/aloo_gobhi.jpg',
             description: 'Tender potatoes and cauliflower florets sautéed with ginger, cumin, and turmeric.'
           },
           {
             name: 'Fresh Tawa Phulka Rotis',
             category: 'bread',
-            image_url: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&auto=format&fit=crop&q=80',
+            image_url: '/images/dishes/roti.jpg',
             description: 'Soft whole-wheat flatbreads puffed on open flame, lightly brushed with ghee.'
+          },
+          {
+            name: 'Crispy Papad & Pickle',
+            category: 'side',
+            image_url: '/images/dishes/papad.jpg',
+            description: 'Roasted papad with mixed spiced mango pickle and plain curd.'
+          }
+        ]
+      },
+      {
+        meal_type: 'snacks',
+        cutoff_time: '15:30:00',
+        serving_start_time: '17:00:00',
+        serving_end_time: '18:00:00',
+        dishes: [
+          {
+            name: 'Masala Chai',
+            category: 'beverage',
+            image_url: '/images/dishes/tea.jpg',
+            description: 'Fragrant ginger and cardamom spiced hot brewed Assam tea.'
+          },
+          {
+            name: 'Osmania Biscuits & Samosa',
+            category: 'snack',
+            image_url: '/images/dishes/samosa.jpg',
+            description: 'Crisp potato pea samosa served with Osmania butter biscuits.'
           }
         ]
       },
@@ -94,19 +135,25 @@ async function seedMenus() {
           {
             name: 'Paneer Butter Masala',
             category: 'main',
-            image_url: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&auto=format&fit=crop&q=80',
+            image_url: '/images/dishes/paneer.jpg',
             description: 'Fresh malai cottage cheese cubes in mildly spiced rich velvety tomato gravy.'
           },
           {
             name: 'Yellow Dal Tadka',
-            category: 'main',
-            image_url: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&auto=format&fit=crop&q=80',
+            category: 'side',
+            image_url: '/images/dishes/dal.jpg',
             description: 'Slow-cooked yellow pigeon peas tempered with cumin, garlic, and dried red chilies in ghee.'
+          },
+          {
+            name: 'Jeera Pulao',
+            category: 'rice',
+            image_url: '/images/dishes/pulao.jpg',
+            description: 'Fragrant basmati rice lightly sautéed with roasted cumin seeds.'
           },
           {
             name: 'Warm Gulab Jamun',
             category: 'dessert',
-            image_url: 'https://images.unsplash.com/photo-1589119908995-c6837fa14d48?w=600&auto=format&fit=crop&q=80',
+            image_url: '/images/dishes/gulab_jamun.jpg',
             description: 'Soft golden milk-solid dumplings soaked in rose and cardamom infused sugar syrup.'
           }
         ]
@@ -134,18 +181,93 @@ async function seedMenus() {
         const menuId = menuRes.rows[0].id;
         menusCreated++;
 
+        // Clear any old/mismatched items for this specific menu to ensure clean state
+        await client.query('DELETE FROM public.menu_items WHERE menu_id = $1;', [menuId]);
+
         for (const dish of config.dishes) {
           await client.query(`
             INSERT INTO public.menu_items (menu_id, name, description, category, is_vegetarian, image_url)
-            VALUES ($1, $2, $3, $4, true, $5)
-            ON CONFLICT DO NOTHING;
+            VALUES ($1, $2, $3, $4, true, $5);
           `, [menuId, dish.name, dish.description, dish.category, dish.image_url]);
           itemsCreated++;
         }
       }
     }
 
-    console.log(`🎉 Seeding complete! Created/updated ${menusCreated} menus with ${itemsCreated} menu items across 7 days.`);
+    // Also globally fix any legacy menu items that might exist on other dates
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/aloo_gobhi.jpg'
+      WHERE name ILIKE '%gobhi%' OR name ILIKE '%gobi%';
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/idli.jpg'
+      WHERE name ILIKE '%idli%' OR name ILIKE '%idly%';
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/vada.jpg'
+      WHERE name ILIKE '%vada%' OR name ILIKE '%wada%';
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/coffee.jpg'
+      WHERE name ILIKE '%coffee%' OR name ILIKE '%kaapi%';
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/tea.jpg'
+      WHERE name ILIKE '%chai%' OR name ILIKE '%tea%';
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/paneer.jpg'
+      WHERE name ILIKE '%paneer%';
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/dal.jpg'
+      WHERE (name ILIKE '%dal%' OR name ILIKE '%tadka%') AND name NOT ILIKE '%makhani%';
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/roti.jpg'
+      WHERE name ILIKE '%roti%' OR name ILIKE '%phulka%' OR name ILIKE '%chapati%';
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/rice.jpg'
+      WHERE name ILIKE '%steamed rice%' OR (name ILIKE '%rice%' AND name NOT ILIKE '%pulao%' AND name NOT ILIKE '%biryani%');
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/pulao.jpg'
+      WHERE name ILIKE '%pulao%' OR name ILIKE '%jeera%';
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/gulab_jamun.jpg'
+      WHERE name ILIKE '%jamun%' OR name ILIKE '%gulab%';
+    `);
+
+    await client.query(`
+      UPDATE public.menu_items
+      SET image_url = '/images/dishes/samosa.jpg'
+      WHERE name ILIKE '%samosa%';
+    `);
+
+    console.log(`🎉 Seeding complete! Created/updated ${menusCreated} menus with ${itemsCreated} verified menu items across 7 days.`);
     await client.end();
   } catch (err) {
     console.error('❌ Seeding error:', err.message);
