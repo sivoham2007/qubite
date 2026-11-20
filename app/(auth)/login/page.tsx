@@ -34,13 +34,13 @@ export default function LoginPage() {
   };
 
   const fillAdmin = () => {
-    setEmail("admin@mess.college.edu");
+    setEmail("admin@msruas.ac.in");
     setPassword("SecureAdminPassword123!");
     setErrorMsg(null);
   };
 
   const fillStudent = () => {
-    setEmail("student1@mess.college.edu");
+    setEmail("student1@msruas.ac.in");
     setPassword("password123");
     setErrorMsg(null);
   };
@@ -57,8 +57,13 @@ export default function LoginPage() {
             QuBite <span className="text-amber-500">Portal</span>
           </h1>
           <p className="text-xs text-zinc-500 font-medium">
-            Eat • Track • Manage — MessMate Operations
+            M. S. Ramaiah University of Applied Sciences (MSRUAS)
           </p>
+          <div className="pt-1">
+            <span className="inline-flex items-center gap-1.5 py-1 px-3 bg-amber-50 border border-amber-200/80 rounded-full text-[11px] font-bold text-amber-900 shadow-xs">
+              🏛️ University Access Only (@msruas.ac.in)
+            </span>
+          </div>
         </div>
 
         {/* Card */}
@@ -66,7 +71,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1">
               <h2 className="text-lg font-black text-brand-dark">Sign In</h2>
-              <p className="text-xs text-zinc-400">Enter your university hostel credentials</p>
+              <p className="text-xs text-zinc-400">Enter your official @msruas.ac.in credentials</p>
             </div>
 
             {/* Quick Demo Autofill Pills */}
@@ -95,12 +100,12 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-zinc-700">Email Address</label>
+              <label className="text-xs font-bold text-zinc-700">MSRUAS Email Address</label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3" />
                 <input
                   type="email"
-                  placeholder="student@mess.college.edu"
+                  placeholder="student1@msruas.ac.in"
                   className="w-full h-10 pl-10 pr-3 rounded-xl border border-brand-border text-xs text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-yellow"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

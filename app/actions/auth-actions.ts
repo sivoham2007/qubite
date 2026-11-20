@@ -2,10 +2,11 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { loginSchema, registerSchema, LoginInput, RegisterInput } from "@/lib/validations/auth";
+import { loginSchema, registerSchema, LoginInput, RegisterInput, COLLEGE_EMAIL_DOMAIN } from "@/lib/validations/auth";
 import { getStore } from "@/lib/data/mess-store";
 import { createClient } from "@/lib/supabase/server";
 import { Profile } from "@/lib/types/database";
+import { sendWelcomeStudentEmail } from "@/lib/services/email";
 
 export async function loginAction(input: LoginInput) {
   const result = loginSchema.safeParse(input);
@@ -14,6 +15,15 @@ export async function loginAction(input: LoginInput) {
   }
 
   const { email, password } = result.data;
+
+  // Strict MSRUAS domain check
+  if (!email.toLowerCase().endsWith(COLLEGE_EMAIL_DOMAIN)) {
+    return {
+      success: false,
+      error: `Access restricted: Only college email addresses ending in ${COLLEGE_EMAIL_DOMAIN} are permitted.`,
+    };
+  }
+
   const cookieStore = cookies();
 
   // Try Supabase Auth first
@@ -59,6 +69,15 @@ export async function registerStudentAction(input: RegisterInput) {
   }
 
   const { full_name, email, roll_number, hostel_block, room_number, password } = result.data;
+
+  // Strict MSRUAS domain check
+  if (!email.toLowerCase().endsWith(COLLEGE_EMAIL_DOMAIN)) {
+    return {
+      success: false,
+      error: `Access restricted: Only college email addresses ending in ${COLLEGE_EMAIL_DOMAIN} are permitted.`,
+    };
+  }
+
   const cookieStore = cookies();
   const store = getStore();
 
@@ -116,6 +135,17 @@ export async function registerStudentAction(input: RegisterInput) {
   cookieStore.set("mess_session_role", "student", { path: "/", httpOnly: true });
   cookieStore.set("mess_user_id", newProfile.id, { path: "/", httpOnly: true });
   cookieStore.set("mess_user_name", newProfile.full_name, { path: "/" });
+
+  // Send Welcome Email via Google SMTP (asynchronous)
+  sendWelcomeStudentEmail({
+    to: email,
+    fullName: full_name,
+    rollNumber: roll_number,
+    hostelBlock: hostel_block,
+    roomNumber: room_number,
+  }).catch((err) => {
+    console.error("Non-blocking welcome email error:", err);
+  });
 
   return { success: true, role: "student" };
 }

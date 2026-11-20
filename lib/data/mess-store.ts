@@ -73,7 +73,7 @@ function generateInitialSeed(): MessStoreState {
   const profiles: Profile[] = [
     {
       id: "u-admin-001",
-      email: "admin@mess.college.edu",
+      email: "admin@msruas.ac.in",
       full_name: "Mess Head Administrator",
       roll_number: null,
       department: "Catering Management",
@@ -103,7 +103,7 @@ function generateInitialSeed(): MessStoreState {
     const block = ["A", "B", "C", "D"][idx % 4];
     profiles.push({
       id: `u-student-${num}`,
-      email: `student${idx + 1}@mess.college.edu`,
+      email: `student${idx + 1}@msruas.ac.in`,
       full_name: name,
       roll_number: `2024CS${num}`,
       department: "Computer Science & Engineering",

@@ -62,8 +62,13 @@ export default function RegisterPage() {
             QuBite Student Registration
           </h1>
           <p className="text-xs text-zinc-500 font-medium">
-            Create your account for daily dining bookings & meal tracking.
+            M. S. Ramaiah University of Applied Sciences (MSRUAS)
           </p>
+          <div className="pt-1">
+            <span className="inline-flex items-center gap-1.5 py-1 px-3 bg-amber-50 border border-amber-200/80 rounded-full text-[11px] font-bold text-amber-900 shadow-xs">
+              🏛️ University Access Only (@msruas.ac.in)
+            </span>
+          </div>
         </div>
 
         {/* Card */}
@@ -72,7 +77,7 @@ export default function RegisterPage() {
             <div className="space-y-1">
               <h2 className="text-lg font-black text-brand-dark">Register as Student</h2>
               <p className="text-xs text-zinc-400">
-                Accounts are automatically registered under the student dining role.
+                Official @msruas.ac.in student dining access registration.
               </p>
             </div>
 
@@ -93,12 +98,12 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-zinc-700">Email Address</label>
+                <label className="text-xs font-bold text-zinc-700">MSRUAS Email Address</label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3" />
                   <input
                     type="email"
-                    placeholder="aarav@mess.college.edu"
+                    placeholder="student@msruas.ac.in"
                     className="w-full h-10 pl-10 pr-3 rounded-xl border border-brand-border text-xs text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-yellow"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
