@@ -55,9 +55,14 @@ async function verifySupabase() {
     const { data: menuData, error: menuError } = await client.from('menus').select('id, date, meal_type').limit(5);
 
     if (menuError) {
-      console.error('❌ Connection error or tables not yet created:', menuError.message);
-      if (menuError.code === '42P01') {
-        console.log('👉 Table "menus" does not exist yet. Please run "supabase/all_in_one_setup.sql" in your Supabase SQL Editor!');
+      console.log('📡 Supabase endpoint responded:', menuError.message);
+      if (menuError.code === '42P01' || menuError.code === 'PGRST205' || menuError.message.includes('schema cache') || menuError.message.includes('does not exist')) {
+        console.log('\n======================================================');
+        console.log('👉 ACTION REQUIRED: Run the SQL setup script!');
+        console.log('1. Go to: https://supabase.com/dashboard/project/ugdgagtytgpwajpnrzzs/sql/new');
+        console.log('2. Paste the contents of supabase/all_in_one_setup.sql');
+        console.log('3. Click "Run"');
+        console.log('======================================================\n');
       }
       return false;
     }
