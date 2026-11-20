@@ -52,7 +52,7 @@ async function verifySupabase() {
   try {
     const client = createClient(url, anonKey);
     console.log('\n📡 Connecting to Supabase with Anon key...');
-    const { data: menuData, error: menuError } = await client.from('menus').select('id, date, meal_type').limit(5);
+    const { data: menuData, error: menuError } = await client.from('menus').select('id, menu_date, meal_type').limit(5);
 
     if (menuError) {
       console.log('📡 Supabase endpoint responded:', menuError.message);

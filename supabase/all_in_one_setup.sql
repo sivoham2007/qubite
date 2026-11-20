@@ -267,7 +267,7 @@ WITH CHECK (auth.uid() = id AND role = (SELECT role FROM public.profiles WHERE i
 -- 2. MENUS POLICIES
 DROP POLICY IF EXISTS "Anyone can view published menus" ON public.menus;
 CREATE POLICY "Anyone can view published menus"
-ON public.menus FOR SELECT TO authenticated
+ON public.menus FOR SELECT TO anon, authenticated
 USING (is_published = true OR public.is_admin());
 
 DROP POLICY IF EXISTS "Admins have full control over menus" ON public.menus;
@@ -278,7 +278,7 @@ USING (public.is_admin()) WITH CHECK (public.is_admin());
 -- 3. MENU ITEMS POLICIES
 DROP POLICY IF EXISTS "Anyone can view menu items of visible menus" ON public.menu_items;
 CREATE POLICY "Anyone can view menu items of visible menus"
-ON public.menu_items FOR SELECT TO authenticated
+ON public.menu_items FOR SELECT TO anon, authenticated
 USING (
     EXISTS (SELECT 1 FROM public.menus WHERE menus.id = menu_items.menu_id AND (menus.is_published = true OR public.is_admin()))
 );
