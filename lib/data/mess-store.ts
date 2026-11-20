@@ -516,7 +516,53 @@ export function getAllMenus(filterDate?: string): Menu[] {
 
 export function getMenuById(id: string, currentUserId?: string): Menu | null {
   const store = getStore();
-  const m = store.menus.find((menu) => menu.id === id);
+  let m = store.menus.find((menu) => menu.id === id);
+
+  // Fallback 1: Resolve menu-YYYY-MM-DD-type format
+  if (!m) {
+    const dateMatch = id.match(/^menu-(\d{4}-\d{2}-\d{2})-(breakfast|lunch|snacks|dinner)$/);
+    if (dateMatch) {
+      const [, dStr, mType] = dateMatch;
+      m = store.menus.find((menu) => menu.menu_date === dStr && menu.meal_type === mType);
+      if (!m) {
+        const foodMeta = FOOD_IMAGES[mType as MealType] || FOOD_IMAGES.lunch;
+        m = {
+          id,
+          menu_date: dStr,
+          meal_type: mType as MealType,
+          cutoff_time: mType === "breakfast" ? "06:00:00" : mType === "lunch" ? "10:00:00" : mType === "snacks" ? "15:30:00" : "17:00:00",
+          serving_start_time: mType === "breakfast" ? "07:30:00" : mType === "lunch" ? "12:30:00" : mType === "snacks" ? "17:00:00" : "19:30:00",
+          serving_end_time: mType === "breakfast" ? "09:30:00" : mType === "lunch" ? "14:30:00" : mType === "snacks" ? "18:00:00" : "21:30:00",
+          is_published: true,
+          image_url: foodMeta.url,
+          calories: foodMeta.calories,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        store.menus.push(m);
+      }
+    }
+  }
+
+  // Fallback 2: Resolve menu-DayName-type format
+  if (!m) {
+    const dayMatch = id.match(/^menu-([A-Za-z]+)-(breakfast|lunch|snacks|dinner)$/);
+    if (dayMatch) {
+      const [, dayName, mType] = dayMatch;
+      const today = new Date();
+      // Look for the upcoming menu with this weekday name and meal_type
+      m = store.menus.find((menu) => {
+        if (menu.meal_type !== mType) return false;
+        const d = new Date(menu.menu_date + "T00:00:00");
+        return d.toLocaleDateString("en-US", { weekday: "long" }).toLowerCase() === dayName.toLowerCase() && menu.menu_date >= today.toISOString().split("T")[0];
+      }) || store.menus.find((menu) => {
+        if (menu.meal_type !== mType) return false;
+        const d = new Date(menu.menu_date + "T00:00:00");
+        return d.toLocaleDateString("en-US", { weekday: "long" }).toLowerCase() === dayName.toLowerCase();
+      });
+    }
+  }
+
   if (!m) return null;
 
   const rawItems = store.menuItems.filter((item) => item.menu_id === m.id);

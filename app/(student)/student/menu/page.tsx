@@ -10,32 +10,64 @@ import { toast } from "sonner";
 import { MealType, Menu } from "@/lib/types/database";
 import { DishImageBadge } from "@/components/shared/dish-image-badge";
 
+const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+/**
+ * Calculates the exact target calendar date (YYYY-MM-DD) for a given weekday name
+ * within the active 7-day schedule window starting today.
+ */
+function getTargetDateForWeekday(dayName: string): { dateStr: string; label: string; isToday: boolean } {
+  const today = new Date();
+  const todayDayName = today.toLocaleDateString("en-US", { weekday: "long" });
+
+  for (let i = 0; i < 7; i++) {
+    const candidate = new Date(today);
+    candidate.setDate(today.getDate() + i);
+    const candidateDayName = candidate.toLocaleDateString("en-US", { weekday: "long" });
+
+    if (candidateDayName.toLowerCase() === dayName.toLowerCase()) {
+      const dateStr = candidate.toISOString().split("T")[0];
+      const label = candidate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      return { dateStr, label, isToday: i === 0 };
+    }
+  }
+
+  const fallback = today.toISOString().split("T")[0];
+  return { dateStr: fallback, label: today.toLocaleDateString("en-US", { month: "short", day: "numeric" }), isToday: true };
+}
+
 export default function StudentWeeklyMenuPage() {
   const allMenus = getAllMenus();
-  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  const [activeDay, setActiveDay] = useState<string>("Wednesday"); // Default to Wednesday
+  const currentDayName = new Date().toLocaleDateString("en-US", { weekday: "long" });
+  const [activeDay, setActiveDay] = useState<string>(
+    daysOfWeek.includes(currentDayName) ? currentDayName : "Monday"
+  );
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [userBookings, setUserBookings] = useState<Record<string, "yes" | "no">>({});
 
   const mealOrder: MealType[] = ["breakfast", "lunch", "snacks", "dinner"];
 
-  // Filter or synthesize menus for the active day
-  const getDayMeals = (dayName: string) => {
+  // Filter or synthesize menus for the active day with its exact calendar date
+  const getDayMeals = (dayName: string): Menu[] => {
+    const { dateStr } = getTargetDateForWeekday(dayName);
+
     return mealOrder.map((type) => {
       const meta = FOOD_IMAGES[type];
+
+      // 1. Direct match by date and meal type
       const match = allMenus.find(
-        (m) =>
-          m.meal_type === type &&
-          new Date(m.menu_date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" }) === dayName
+        (m) => m.meal_type === type && m.menu_date === dateStr
       );
 
       if (match) return match;
 
+      // 2. Synthesize deterministically with target calendar date
       const item1Name = meta.desc.split("+")[0]?.trim() || "Main Serving";
       const item2Name = meta.desc.split("+")[1]?.trim() || "Accompaniment";
 
       return {
-        id: `menu-${dayName}-${type}`,
-        menu_date: new Date().toISOString().split("T")[0],
+        id: `menu-${dateStr}-${type}`,
+        menu_date: dateStr,
         meal_type: type,
         cutoff_time: type === "breakfast" ? "06:00:00" : type === "lunch" ? "10:00:00" : type === "snacks" ? "15:30:00" : "17:00:00",
         serving_start_time: type === "breakfast" ? "07:30:00" : type === "lunch" ? "12:30:00" : type === "snacks" ? "17:00:00" : "19:30:00",
@@ -46,8 +78,8 @@ export default function StudentWeeklyMenuPage() {
         special_badge: type === "dinner" && dayName === "Sunday" ? "Grand Feast" : type === "dinner" ? "Chef's Special" : undefined,
         items: [
           {
-            id: "1",
-            menu_id: "m",
+            id: `item-${dateStr}-${type}-1`,
+            menu_id: `menu-${dateStr}-${type}`,
             name: item1Name,
             category: "main" as const,
             is_vegetarian: true,
@@ -56,8 +88,8 @@ export default function StudentWeeklyMenuPage() {
             created_at: "",
           },
           {
-            id: "2",
-            menu_id: "m",
+            id: `item-${dateStr}-${type}-2`,
+            menu_id: `menu-${dateStr}-${type}`,
             name: item2Name,
             category: (type === "snacks" ? "snack" : "side") as any,
             is_vegetarian: true,
@@ -67,6 +99,7 @@ export default function StudentWeeklyMenuPage() {
           },
         ],
         expected_attendance: 18,
+        user_meal_plan: null,
         created_at: "",
         updated_at: "",
       };
@@ -79,6 +112,7 @@ export default function StudentWeeklyMenuPage() {
     setLoadingId(null);
 
     if (res.success) {
+      setUserBookings((prev) => ({ ...prev, [menuId]: status }));
       toast.success(status === "yes" ? "Meal booked successfully!" : "Meal opt-out confirmed.");
     } else {
       toast.error(res.error || "Failed to update meal booking");
@@ -86,6 +120,7 @@ export default function StudentWeeklyMenuPage() {
   };
 
   const dayMeals = getDayMeals(activeDay);
+  const activeDayInfo = getTargetDateForWeekday(activeDay);
 
   return (
     <div className="space-y-6">
@@ -98,7 +133,7 @@ export default function StudentWeeklyMenuPage() {
           Complete Weekly Mess Menu
         </h1>
         <p className="text-xs text-zinc-500 mt-0.5">
-          Plan your meals across all seven days with nutritional counts and booking cutoffs.
+          Plan your meals across all seven days with nutritional counts, booking cutoffs, and instant attendance opt-in.
         </p>
       </div>
 
@@ -106,17 +141,31 @@ export default function StudentWeeklyMenuPage() {
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
         {daysOfWeek.map((day) => {
           const isSelected = activeDay === day;
+          const info = getTargetDateForWeekday(day);
+
           return (
             <button
               key={day}
               onClick={() => setActiveDay(day)}
-              className={`py-3 px-5 rounded-2xl font-bold text-xs shrink-0 transition-all ${
+              className={`py-2.5 px-4 rounded-2xl font-bold text-xs shrink-0 transition-all flex flex-col items-center gap-0.5 ${
                 isSelected
                   ? "bg-brand-black text-brand-yellow shadow-md scale-[1.02]"
                   : "bg-white text-zinc-600 border border-brand-border hover:bg-brand-cream hover:text-brand-dark"
               }`}
             >
-              {day}
+              <div className="flex items-center gap-1.5">
+                <span>{day}</span>
+                {info.isToday && (
+                  <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-extrabold uppercase ${
+                    isSelected ? "bg-brand-yellow text-brand-black" : "bg-emerald-100 text-emerald-800"
+                  }`}>
+                    Today
+                  </span>
+                )}
+              </div>
+              <span className={`text-[10px] font-normal ${isSelected ? "text-amber-200" : "text-zinc-400"}`}>
+                {info.label}
+              </span>
             </button>
           );
         })}
@@ -131,6 +180,7 @@ export default function StudentWeeklyMenuPage() {
             ? resolveDishImage(primaryDish.name, primaryDish.image_url, primaryDish.category)
             : resolveDishImage(meal.meal_type, meal.image_url || meta.url);
           const mealTitle = meal.items && meal.items.length > 0 ? meal.items.map(i => i.name).slice(0, 2).join(" + ") : meta.desc;
+          const currentPlan = userBookings[meal.id] || (meal as Menu).user_meal_plan?.status || null;
 
           return (
             <div
@@ -198,7 +248,7 @@ export default function StudentWeeklyMenuPage() {
                       {meal.calories || meta.calories} kcal
                     </span>
                     <span className="px-2 py-0.5 rounded-full bg-brand-softGreen text-emerald-800 text-[10px] font-bold">
-                      Available
+                      Pure Veg
                     </span>
                   </div>
                 </div>
@@ -209,18 +259,28 @@ export default function StudentWeeklyMenuPage() {
                 <span className="text-[11px] font-bold text-zinc-500">Attendance:</span>
                 <div className="flex gap-1.5">
                   <button
+                    type="button"
                     disabled={loadingId === meal.id}
                     onClick={() => handleBooking(meal.id, "yes")}
-                    className="px-3 py-1.5 rounded-xl bg-brand-yellow hover:bg-brand-yellowHover text-brand-black text-xs font-bold flex items-center gap-1 shadow-xs transition-colors"
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-xs transition-colors ${
+                      currentPlan === "yes"
+                        ? "bg-brand-yellow text-brand-black ring-2 ring-amber-400"
+                        : "bg-white hover:bg-brand-yellow/30 text-zinc-700 border border-brand-border"
+                    }`}
                   >
-                    <Check className="w-3.5 h-3.5" /> Book
+                    <Check className="w-3.5 h-3.5" /> {currentPlan === "yes" ? "Booked" : "Book"}
                   </button>
                   <button
+                    type="button"
                     disabled={loadingId === meal.id}
                     onClick={() => handleBooking(meal.id, "no")}
-                    className="px-3 py-1.5 rounded-xl bg-white hover:bg-red-50 text-red-600 border border-brand-border text-xs font-bold flex items-center gap-1 transition-colors"
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition-colors ${
+                      currentPlan === "no"
+                        ? "bg-red-600 text-white shadow-xs"
+                        : "bg-white hover:bg-red-50 text-red-600 border border-brand-border"
+                    }`}
                   >
-                    <X className="w-3.5 h-3.5" /> Skip
+                    <X className="w-3.5 h-3.5" /> {currentPlan === "no" ? "Skipped" : "Skip"}
                   </button>
                 </div>
               </div>

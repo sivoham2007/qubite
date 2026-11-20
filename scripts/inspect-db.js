@@ -1,6 +1,6 @@
 const { Client } = require('pg');
 
-async function inspectCategory() {
+async function check() {
   const client = new Client({
     host: 'db.ugdgagtytgpwajpnrzzs.supabase.co',
     port: 5432,
@@ -11,13 +11,24 @@ async function inspectCategory() {
   });
 
   await client.connect();
-  const res = await client.query(`
-    SELECT conname, pg_get_constraintdef(oid)
-    FROM pg_constraint
-    WHERE conname = 'menu_items_category_check';
+  const cols = await client.query(`
+    SELECT column_name, data_type, is_nullable
+    FROM information_schema.columns
+    WHERE table_name = 'meal_plans';
   `);
-  console.log('menu_items_category_check:', res.rows);
+  console.log('Columns on meal_plans:');
+  console.table(cols.rows);
+
+  const cons = await client.query(`
+    SELECT conname, pg_get_constraintdef(c.oid)
+    FROM pg_constraint c
+    JOIN pg_class r ON r.oid = c.conrelid
+    WHERE r.relname = 'meal_plans';
+  `);
+  console.log('Constraints on meal_plans:');
+  console.table(cons.rows);
+
   await client.end();
 }
 
-inspectCategory().catch(console.error);
+check().catch(console.error);

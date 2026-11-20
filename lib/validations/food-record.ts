@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const foodRecordSchema = z
   .object({
-    menu_id: z.string().uuid("Invalid menu ID"),
+    menu_id: z.string().min(1, "Menu ID is required"),
     prepared_qty: z.coerce.number().min(0, "Prepared quantity cannot be negative"),
     leftover_qty: z.coerce.number().min(0, "Leftover quantity cannot be negative"),
     unit: z.enum(["kg", "portions"]),
