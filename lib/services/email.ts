@@ -146,6 +146,64 @@ export async function sendWelcomeStudentEmail(params: {
 }
 
 /**
+ * 6-Digit Email Verification Code (OTP) for MSRUAS Student Registration
+ */
+export async function sendOtpVerificationEmail(params: {
+  to: string;
+  fullName: string;
+  otpCode: string;
+}) {
+  const subject = `Your QuBite Verification Code: ${params.otpCode} 🔐`;
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #FFF9F3; margin: 0; padding: 24px; color: #171717; }
+        .card { max-width: 520px; margin: 0 auto; background: #ffffff; border-radius: 24px; border: 1px solid #EEE8E0; padding: 36px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .brand { text-align: center; margin-bottom: 24px; }
+        .brand-badge { display: inline-block; background: #FFC83D; color: #151515; font-size: 13px; font-weight: 900; padding: 6px 16px; border-radius: 20px; }
+        .title { font-size: 22px; font-weight: 800; color: #151515; text-align: center; margin-bottom: 8px; }
+        .subtitle { font-size: 13px; color: #666666; text-align: center; line-height: 1.5; margin-bottom: 24px; }
+        .otp-box { text-align: center; margin: 28px 0; }
+        .otp-code { display: inline-block; background: #FFF9F3; border: 2px dashed #FFC83D; border-radius: 16px; padding: 16px 28px; font-family: 'Courier New', Courier, monospace; font-size: 36px; font-weight: 900; letter-spacing: 8px; color: #151515; }
+        .warning-box { background: #FFF3F3; border: 1px solid #FFE0E0; border-radius: 12px; padding: 12px 16px; font-size: 12px; color: #D32F2F; line-height: 1.4; margin-top: 24px; }
+        .footer { text-align: center; font-size: 11px; color: #888888; margin-top: 28px; border-top: 1px solid #EEE8E0; pt: 16px; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <div class="brand">
+          <div class="brand-badge">QuBite • MSRUAS Mess System</div>
+        </div>
+        <h1 class="title">Verify Your College Email</h1>
+        <p class="subtitle">
+          Hello <strong>${params.fullName}</strong>,<br>
+          Use the 6-digit verification code below to complete your registration for the MSRUAS Hostel Mess Portal:
+        </p>
+
+        <div class="otp-box">
+          <div class="otp-code">${params.otpCode}</div>
+        </div>
+
+        <div class="warning-box">
+          <strong>⏰ Valid for 10 minutes:</strong> This code will expire shortly. Never share this verification code with anyone. QuBite or MSRUAS staff will never ask for your OTP.
+        </div>
+
+        <div class="footer">
+          <p style="margin: 4px 0;">M. S. Ramaiah University of Applied Sciences (MSRUAS)</p>
+          <p style="margin: 4px 0;">If you did not request this registration, please ignore this email.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({ to: params.to, subject, html });
+}
+
+/**
  * Meal Cutoff Alert Email
  */
 export async function sendMealCutoffAlert(params: {
