@@ -13,6 +13,9 @@ ALTER TABLE public.recommendations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.grocery_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.recipes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.recipe_ingredients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.complaints ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.wallet_transactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.activity_logs ENABLE ROW LEVEL SECURITY;
 
 -- Helper function to check if caller is an admin
 CREATE OR REPLACE FUNCTION public.is_admin()
@@ -144,3 +147,41 @@ DROP POLICY IF EXISTS "Admins manage recipe ingredients" ON public.recipe_ingred
 CREATE POLICY "Admins manage recipe ingredients"
 ON public.recipe_ingredients FOR ALL TO authenticated
 USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+-- 13. COMPLAINTS POLICIES
+DROP POLICY IF EXISTS "Students view their own complaints or admins view all" ON public.complaints;
+CREATE POLICY "Students view their own complaints or admins view all"
+ON public.complaints FOR SELECT TO authenticated
+USING (auth.uid() = student_id OR public.is_admin());
+
+DROP POLICY IF EXISTS "Students insert their own complaints" ON public.complaints;
+CREATE POLICY "Students insert their own complaints"
+ON public.complaints FOR INSERT TO authenticated
+WITH CHECK (auth.uid() = student_id);
+
+DROP POLICY IF EXISTS "Admins can update complaints" ON public.complaints;
+CREATE POLICY "Admins can update complaints"
+ON public.complaints FOR UPDATE TO authenticated
+USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+-- 14. WALLET TRANSACTIONS POLICIES
+DROP POLICY IF EXISTS "Students view their own transactions or admins view all" ON public.wallet_transactions;
+CREATE POLICY "Students view their own transactions or admins view all"
+ON public.wallet_transactions FOR SELECT TO authenticated
+USING (auth.uid() = student_id OR public.is_admin());
+
+DROP POLICY IF EXISTS "Users can record their own wallet transactions" ON public.wallet_transactions;
+CREATE POLICY "Users can record their own wallet transactions"
+ON public.wallet_transactions FOR INSERT TO authenticated
+WITH CHECK (auth.uid() = student_id OR public.is_admin());
+
+-- 15. ACTIVITY LOGS POLICIES
+DROP POLICY IF EXISTS "Users can view activities" ON public.activity_logs;
+CREATE POLICY "Users can view activities"
+ON public.activity_logs FOR SELECT TO authenticated
+USING (auth.uid() = student_id OR student_id IS NULL OR public.is_admin());
+
+DROP POLICY IF EXISTS "Authenticated users can create activities" ON public.activity_logs;
+CREATE POLICY "Authenticated users can create activities"
+ON public.activity_logs FOR INSERT TO authenticated
+WITH CHECK (true);

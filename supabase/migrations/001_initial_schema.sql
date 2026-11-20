@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     hostel_block TEXT,
     room_number TEXT,
     role TEXT NOT NULL DEFAULT 'student' CHECK (role IN ('student', 'admin')),
+    wallet_balance NUMERIC(10,2) NOT NULL DEFAULT 450.00,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
@@ -158,6 +159,41 @@ CREATE TABLE IF NOT EXISTS public.recipe_ingredients (
     CONSTRAINT uq_recipe_grocery_ingredient UNIQUE (recipe_id, grocery_item_id)
 );
 
+-- 13. COMPLAINTS
+CREATE TABLE IF NOT EXISTS public.complaints (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    student_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+    student_name TEXT,
+    category TEXT NOT NULL CHECK (category IN ('Food Quality', 'Hygiene', 'Food Quantity', 'Late Serving', 'Menu Issues', 'Other')),
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'In Progress', 'Resolved')),
+    urgency TEXT NOT NULL DEFAULT 'Normal' CHECK (urgency IN ('Normal', 'High', 'Urgent')),
+    admin_remarks TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    resolved_at TIMESTAMPTZ
+);
+
+-- 14. WALLET TRANSACTIONS
+CREATE TABLE IF NOT EXISTS public.wallet_transactions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    student_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+    amount NUMERIC(10,2) NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('topup', 'meal_deduction', 'refund')),
+    description TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'Success' CHECK (status IN ('Success', 'Pending', 'Failed')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+-- 15. ACTIVITY LOGS
+CREATE TABLE IF NOT EXISTS public.activity_logs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    student_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('meal', 'wallet', 'menu', 'complaint', 'feedback')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
 -- INDEXES
 CREATE INDEX IF NOT EXISTS idx_menus_date_published ON public.menus (menu_date, is_published);
 CREATE INDEX IF NOT EXISTS idx_menu_items_menu_id ON public.menu_items (menu_id);
@@ -169,3 +205,7 @@ CREATE INDEX IF NOT EXISTS idx_notifications_user_unread ON public.notifications
 CREATE INDEX IF NOT EXISTS idx_food_records_menu ON public.food_records (menu_id);
 CREATE INDEX IF NOT EXISTS idx_recommendations_active ON public.recommendations (is_dismissed, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_recipe_ingredients_recipe ON public.recipe_ingredients (recipe_id);
+CREATE INDEX IF NOT EXISTS idx_complaints_student ON public.complaints (student_id);
+CREATE INDEX IF NOT EXISTS idx_complaints_status ON public.complaints (status);
+CREATE INDEX IF NOT EXISTS idx_wallet_student ON public.wallet_transactions (student_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_activities_student ON public.activity_logs (student_id, created_at DESC);
