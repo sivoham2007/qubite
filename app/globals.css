@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* QuBite Warm Cream Background (#FFF9F3) */
+    --background: 34 100% 98%;
+    --foreground: 0 0% 9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+
+    /* QuBite Primary Yellow #FFC83D */
+    --primary: 43 100% 62%;
+    --primary-foreground: 0 0% 8%;
+
+    --secondary: 35 30% 94%;
+    --secondary-foreground: 0 0% 15%;
+
+    --muted: 35 20% 93%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 43 100% 94%;
+    --accent-foreground: 43 100% 25%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Light Border #EEE8E0 */
+    --border: 34 29% 91%;
+    --input: 34 29% 91%;
+    --ring: 43 100% 62%;
+
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-brand-cream text-brand-dark font-sans antialiased min-h-screen selection:bg-brand-yellow selection:text-brand-black;
+  }
+}
+
+/* Custom scrollbars for clean UI */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #EEE8E0;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D5CFC6;
+}
