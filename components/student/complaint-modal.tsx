@@ -53,16 +53,16 @@ export function ComplaintModal({ open, onOpenChange }: ComplaintModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg bg-white rounded-3xl border border-brand-border p-6 shadow-floating">
+      <DialogContent className="max-w-lg bg-white rounded-2xl border border-slate-200 p-6 shadow-xl">
         <form onSubmit={handleSubmit}>
           <DialogHeader className="space-y-1">
-            <div className="flex items-center gap-2 text-brand-dark">
-              <div className="h-9 w-9 rounded-xl bg-brand-softPurple flex items-center justify-center text-purple-800">
+            <div className="flex items-center gap-2 text-slate-900">
+              <div className="h-9 w-9 rounded-xl bg-rose-50 border border-rose-200/60 flex items-center justify-center text-rose-700">
                 <AlertCircle className="w-5 h-5" />
               </div>
               <DialogTitle className="text-lg font-bold">Raise a Hostel Mess Complaint</DialogTitle>
             </div>
-            <DialogDescription className="text-xs text-zinc-500">
+            <DialogDescription className="text-xs text-slate-500">
               Submit an issue directly to the hostel catering committee and mess contractor.
             </DialogDescription>
           </DialogHeader>
@@ -70,11 +70,11 @@ export function ComplaintModal({ open, onOpenChange }: ComplaintModalProps) {
           <div className="space-y-3.5 py-4">
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-zinc-700">Complaint Category</label>
+                <label className="text-xs font-semibold text-slate-700">Complaint Category</label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value as any)}
-                  className="w-full h-10 rounded-xl border border-brand-border bg-white px-3 text-xs font-medium text-brand-dark"
+                  className="w-full h-10 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400"
                 >
                   <option value="Food Quality">Food Quality</option>
                   <option value="Hygiene">Hygiene & Cleanliness</option>
@@ -86,11 +86,11 @@ export function ComplaintModal({ open, onOpenChange }: ComplaintModalProps) {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-zinc-700">Urgency Level</label>
+                <label className="text-xs font-semibold text-slate-700">Urgency Level</label>
                 <select
                   value={urgency}
                   onChange={(e) => setUrgency(e.target.value as any)}
-                  className="w-full h-10 rounded-xl border border-brand-border bg-white px-3 text-xs font-medium text-brand-dark"
+                  className="w-full h-10 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400"
                 >
                   <option value="Normal">Normal</option>
                   <option value="High">High</option>
@@ -100,26 +100,26 @@ export function ComplaintModal({ open, onOpenChange }: ComplaintModalProps) {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-zinc-700">Subject / Title</label>
+              <label className="text-xs font-semibold text-slate-700">Subject / Title</label>
               <input
                 type="text"
                 placeholder="Brief summary of the issue..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="w-full h-10 px-3 rounded-xl border border-brand-border bg-white text-xs text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                className="w-full h-10 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-zinc-700">Description</label>
+              <label className="text-xs font-semibold text-slate-700">Description</label>
               <textarea
                 rows={3}
                 placeholder="Provide specific details (meal time, table, dish name, or observation)..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
-                className="w-full p-3 rounded-xl border border-brand-border bg-white text-xs text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white"
               />
             </div>
           </div>
@@ -128,14 +128,14 @@ export function ComplaintModal({ open, onOpenChange }: ComplaintModalProps) {
             <button
               type="button"
               onClick={() => onOpenChange(false)}
-              className="px-4 py-2.5 rounded-xl border border-brand-border text-xs font-bold text-zinc-700 hover:bg-zinc-100"
+              className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2.5 rounded-xl bg-brand-yellow hover:bg-brand-yellowHover text-brand-black text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-colors"
+              className="px-5 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition-colors"
             >
               {loading ? "Submitting..." : "Submit Complaint"}
               <ArrowRight className="w-3.5 h-3.5" />

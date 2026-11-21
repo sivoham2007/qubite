@@ -41,39 +41,39 @@ export function TopUpModal({ open, onOpenChange, currentBalance }: TopUpModalPro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-white rounded-3xl border border-brand-border p-6 shadow-floating">
+      <DialogContent className="max-w-md bg-white rounded-2xl border border-slate-200 p-6 shadow-xl">
         <DialogHeader className="space-y-1">
-          <div className="flex items-center gap-2 text-brand-dark">
-            <div className="h-9 w-9 rounded-xl bg-brand-softGreen flex items-center justify-center text-emerald-800">
+          <div className="flex items-center gap-2 text-slate-900">
+            <div className="h-9 w-9 rounded-xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-700">
               <Wallet className="w-5 h-5" />
             </div>
             <DialogTitle className="text-lg font-bold">Top Up QuBite Wallet</DialogTitle>
           </div>
-          <DialogDescription className="text-xs text-zinc-500">
+          <DialogDescription className="text-xs text-slate-500">
             Instant wallet recharge for hostel meal bookings and special dishes.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-3">
           {/* Current Balance Banner */}
-          <div className="p-3.5 bg-brand-cream rounded-2xl border border-brand-border flex items-center justify-between">
-            <span className="text-xs font-semibold text-zinc-600">Current Balance</span>
-            <span className="text-lg font-extrabold text-brand-dark">₹{currentBalance}</span>
+          <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-600">Current Balance</span>
+            <span className="text-lg font-bold text-slate-900">₹{currentBalance}</span>
           </div>
 
           {/* Quick Amounts */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-700">Select Amount</label>
+            <label className="text-xs font-semibold text-slate-700">Select Amount</label>
             <div className="grid grid-cols-4 gap-2">
               {quickAmounts.map((q) => (
                 <button
                   key={q}
                   type="button"
                   onClick={() => setAmount(q)}
-                  className={`py-2 px-2.5 rounded-xl text-xs font-bold border transition-colors ${
+                  className={`py-2 px-2.5 rounded-xl text-xs font-semibold border transition-colors ${
                     amount === q
-                      ? "bg-brand-yellow text-brand-black border-brand-yellow"
-                      : "bg-white text-zinc-700 border-brand-border hover:bg-brand-cream"
+                      ? "bg-amber-400 text-slate-950 border-amber-400 font-bold"
+                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
                   }`}
                 >
                   +₹{q}
@@ -84,21 +84,21 @@ export function TopUpModal({ open, onOpenChange, currentBalance }: TopUpModalPro
 
           {/* Custom Amount */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-700">Or Enter Amount (₹)</label>
+            <label className="text-xs font-semibold text-slate-700">Or Enter Amount (₹)</label>
             <div className="relative">
-              <span className="absolute left-3.5 top-2.5 text-zinc-400 font-bold text-sm">₹</span>
+              <span className="absolute left-3.5 top-2.5 text-slate-400 font-bold text-sm">₹</span>
               <input
                 type="number"
                 min="10"
                 step="50"
                 value={amount}
                 onChange={(e) => setAmount(Math.max(0, parseInt(e.target.value) || 0))}
-                className="w-full h-11 pl-8 pr-4 bg-white border border-brand-border rounded-xl text-sm font-bold text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                className="w-full h-10 pl-8 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white"
               />
             </div>
           </div>
 
-          <p className="text-[11px] text-zinc-400 flex items-center gap-1.5">
+          <p className="text-[11px] text-slate-500 flex items-center gap-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
             Zero transaction fees on UPI, Debit Card, and NetBanking.
           </p>
@@ -108,7 +108,7 @@ export function TopUpModal({ open, onOpenChange, currentBalance }: TopUpModalPro
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="px-4 py-2.5 rounded-xl border border-brand-border text-xs font-bold text-zinc-700 hover:bg-zinc-100"
+            className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50"
           >
             Cancel
           </button>
@@ -116,7 +116,7 @@ export function TopUpModal({ open, onOpenChange, currentBalance }: TopUpModalPro
             type="button"
             disabled={loading || amount <= 0}
             onClick={handleTopUp}
-            className="px-5 py-2.5 rounded-xl bg-brand-yellow hover:bg-brand-yellowHover text-brand-black text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-colors"
+            className="px-5 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition-colors"
           >
             {loading ? "Recharging..." : `Add ₹${amount} to Wallet`}
             <ArrowRight className="w-3.5 h-3.5" />

@@ -11,7 +11,7 @@ export function TopUpModalButton({ currentBalance }: { currentBalance: number })
     <>
       <button
         onClick={() => setOpen(true)}
-        className="px-4 py-2.5 rounded-2xl bg-brand-yellow hover:bg-brand-yellowHover text-brand-black text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors shrink-0"
+        className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors shrink-0"
       >
         <Plus className="w-4 h-4" />
         <span>Top Up Wallet</span>

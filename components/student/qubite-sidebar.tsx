@@ -12,8 +12,6 @@ import {
   Bell,
   User,
   Settings,
-  HelpCircle,
-  Utensils,
   Headphones,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -39,91 +37,92 @@ export function QubiteSidebar({ unreadNotifsCount = 0 }: QubiteSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-brand-black text-white flex flex-col min-h-screen border-r border-[#222222] shrink-0 sticky top-0 h-screen select-none">
-      {/* Brand Header */}
-      <div className="p-6 pb-5">
-        <Link href="/student/dashboard" className="flex items-center gap-3 group">
-          <QubiteLogo size="md" className="group-hover:scale-105 transition-transform" />
-          <div>
-            <div className="flex items-center gap-1.5">
-              <h1 className="font-extrabold text-xl text-white tracking-tight">
-                QuBite
-              </h1>
-              <span className="text-[10px] font-bold uppercase bg-brand-yellow/20 text-brand-yellow px-1.5 py-0.5 rounded">
-                MESSMATE
-              </span>
+    <aside className="w-64 fixed/sticky h-screen bg-slate-900 text-slate-300 flex flex-col justify-between p-4 border-r border-slate-800 shrink-0 sticky top-0 select-none z-40">
+      {/* Top Brand Header */}
+      <div>
+        <div className="p-2 pb-4">
+          <Link href="/student/dashboard" className="flex items-center gap-3 group">
+            <QubiteLogo size="md" className="group-hover:scale-105 transition-transform shrink-0" />
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <h1 className="font-extrabold text-xl text-white tracking-tight">
+                  QuBite
+                </h1>
+                <span className="text-[10px] font-bold uppercase bg-amber-400/20 text-amber-300 border border-amber-400/30 px-1.5 py-0.5 rounded">
+                  MESSMATE
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 font-medium tracking-wide">
+                Eat • Track • Manage
+              </p>
             </div>
-            <p className="text-[11px] text-zinc-400 font-medium tracking-wide">
-              Eat • Track • Manage
-            </p>
-          </div>
-        </Link>
+          </Link>
+        </div>
+
+        {/* Dynamic Navigation Menu */}
+        <nav className="px-1 py-1 space-y-1 overflow-y-auto max-h-[calc(100vh-250px)]">
+          {navItems.map((item) => {
+            const isActive =
+              pathname === item.href ||
+              (item.href === "/student/my-meals" && pathname === "/student/meal-plans") ||
+              (item.href === "/student/feedback" && pathname === "/student/ratings");
+
+            const Icon = item.icon;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 group",
+                  isActive
+                    ? "bg-amber-400 text-slate-950 font-semibold rounded-xl shadow-xs"
+                    : "text-slate-400 hover:text-white hover:bg-slate-800/60 rounded-xl"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <Icon
+                    className={cn(
+                      "w-4 h-4 transition-colors shrink-0",
+                      isActive
+                        ? "text-slate-950 stroke-[2.5]"
+                        : "text-slate-400 group-hover:text-amber-400"
+                    )}
+                  />
+                  <span>{item.label}</span>
+                </div>
+
+                {item.badge && unreadNotifsCount > 0 && (
+                  <span
+                    className={cn(
+                      "text-[10px] font-bold px-1.5 py-0.2 rounded-full",
+                      isActive ? "bg-slate-950 text-amber-400" : "bg-amber-400 text-slate-950"
+                    )}
+                  >
+                    {unreadNotifsCount}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
       </div>
 
-      {/* Navigation Menu */}
-      <nav className="flex-1 px-4 py-2 space-y-1.5 overflow-y-auto">
-        {navItems.map((item) => {
-          // Exact or nested active state
-          const isActive =
-            pathname === item.href ||
-            (item.href === "/student/my-meals" && pathname === "/student/meal-plans") ||
-            (item.href === "/student/feedback" && pathname === "/student/ratings");
-
-          const Icon = item.icon;
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-semibold transition-all duration-150 group",
-                isActive
-                  ? "bg-brand-yellow text-brand-black shadow-sm font-bold"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-900/80"
-              )}
-            >
-              <div className="flex items-center gap-3">
-                <Icon
-                  className={cn(
-                    "w-[18px] h-[18px] transition-colors",
-                    isActive
-                      ? "text-brand-black stroke-[2.5]"
-                      : "text-zinc-400 group-hover:text-brand-yellow"
-                  )}
-                />
-                <span>{item.label}</span>
-              </div>
-
-              {item.badge && unreadNotifsCount > 0 && (
-                <span
-                  className={cn(
-                    "text-[10px] font-bold px-1.5 py-0.5 rounded-full",
-                    isActive ? "bg-black text-white" : "bg-brand-yellow text-brand-black"
-                  )}
-                >
-                  {unreadNotifsCount}
-                </span>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Bottom Help and Support Card */}
-      <div className="p-4 pt-2">
-        <div className="p-4 rounded-2xl bg-gradient-to-b from-[#202020] to-[#181818] border border-zinc-800/80 text-zinc-300 space-y-2">
-          <div className="flex items-center gap-2 text-brand-yellow">
+      {/* Bottom Need Assistance Support Card */}
+      <div className="p-1 pt-2">
+        <div className="bg-slate-800/80 border border-slate-700/60 rounded-xl p-3.5 space-y-2 text-slate-300">
+          <div className="flex items-center gap-2 text-amber-400">
             <Headphones className="w-4 h-4" />
             <span className="text-xs font-bold text-white uppercase tracking-wider">
               Need Assistance?
             </span>
           </div>
-          <p className="text-[11px] text-zinc-400 leading-snug">
+          <p className="text-[11px] text-slate-400 leading-snug">
             Contact your warden or hostel catering representative anytime.
           </p>
-          <div className="pt-1 border-t border-zinc-800 flex items-center justify-between text-[10px] text-zinc-400">
+          <div className="pt-1.5 border-t border-slate-700/60 flex items-center justify-between text-[10px] text-slate-400">
             <span className="font-semibold text-white">Central Mess Hall 1</span>
-            <span className="text-brand-yellow font-mono">Ext. 204</span>
+            <span className="text-amber-400 font-mono font-bold">Ext. 204</span>
           </div>
         </div>
       </div>

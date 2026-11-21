@@ -17,24 +17,24 @@ export function QuickActionsCard() {
 
   return (
     <>
-      <div className="bg-white rounded-3xl p-6 border border-brand-border shadow-subtle space-y-4">
+      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
         <div>
-          <h3 className="font-extrabold text-base text-brand-dark tracking-tight">
+          <h3 className="font-semibold text-base text-slate-900 tracking-tight">
             Quick Actions
           </h3>
-          <p className="text-[11px] text-zinc-400">Frequently used hostel mess shortcuts</p>
+          <p className="text-[11px] text-slate-500">Frequently used hostel mess shortcuts</p>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           {/* Action 1: Mark Meal */}
           <button
             onClick={handleMarkMealToday}
-            className="p-4 rounded-2xl bg-brand-softYellow hover:bg-[#ffe3b5] border border-amber-200/50 flex flex-col items-center justify-center text-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] group"
+            className="p-4 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200/60 flex flex-col items-center justify-center text-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] group"
           >
-            <div className="h-10 w-10 rounded-xl bg-white text-amber-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-              <UtensilsCrossed className="w-5 h-5" />
+            <div className="h-9 w-9 rounded-lg bg-white text-amber-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+              <UtensilsCrossed className="w-4 h-4" />
             </div>
-            <span className="text-xs font-bold text-amber-950">
+            <span className="text-xs font-semibold text-slate-900">
               Mark Meal (Today)
             </span>
           </button>
@@ -42,12 +42,12 @@ export function QuickActionsCard() {
           {/* Action 2: Raise Complaint */}
           <button
             onClick={() => setComplaintOpen(true)}
-            className="p-4 rounded-2xl bg-brand-softPurple hover:bg-[#ded4ff] border border-purple-200/50 flex flex-col items-center justify-center text-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] group"
+            className="p-4 rounded-xl bg-rose-50 hover:bg-rose-100/80 border border-rose-200/60 flex flex-col items-center justify-center text-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] group"
           >
-            <div className="h-10 w-10 rounded-xl bg-white text-purple-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-              <AlertCircle className="w-5 h-5" />
+            <div className="h-9 w-9 rounded-lg bg-white text-rose-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+              <AlertCircle className="w-4 h-4" />
             </div>
-            <span className="text-xs font-bold text-purple-950">
+            <span className="text-xs font-semibold text-slate-900">
               Raise Complaint
             </span>
           </button>
@@ -55,12 +55,12 @@ export function QuickActionsCard() {
           {/* Action 3: Top Up Wallet */}
           <button
             onClick={() => setTopUpOpen(true)}
-            className="p-4 rounded-2xl bg-brand-softGreen hover:bg-[#c9efdb] border border-emerald-200/50 flex flex-col items-center justify-center text-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] group"
+            className="p-4 rounded-xl bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200/60 flex flex-col items-center justify-center text-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] group"
           >
-            <div className="h-10 w-10 rounded-xl bg-white text-emerald-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-              <Wallet className="w-5 h-5" />
+            <div className="h-9 w-9 rounded-lg bg-white text-emerald-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+              <Wallet className="w-4 h-4" />
             </div>
-            <span className="text-xs font-bold text-emerald-950">
+            <span className="text-xs font-semibold text-slate-900">
               Top Up Wallet
             </span>
           </button>
@@ -68,12 +68,12 @@ export function QuickActionsCard() {
           {/* Action 4: Give Feedback */}
           <Link
             href="/student/feedback"
-            className="p-4 rounded-2xl bg-[#FFE4D6] hover:bg-[#ffd6c2] border border-orange-200/50 flex flex-col items-center justify-center text-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] group"
+            className="p-4 rounded-xl bg-indigo-50 hover:bg-indigo-100/80 border border-indigo-200/60 flex flex-col items-center justify-center text-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] group"
           >
-            <div className="h-10 w-10 rounded-xl bg-white text-orange-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-              <Star className="w-5 h-5 fill-orange-700" />
+            <div className="h-9 w-9 rounded-lg bg-white text-indigo-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+              <Star className="w-4 h-4 fill-indigo-600" />
             </div>
-            <span className="text-xs font-bold text-orange-950">
+            <span className="text-xs font-semibold text-slate-900">
               Give Feedback
             </span>
           </Link>

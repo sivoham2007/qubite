@@ -15,8 +15,8 @@ export default async function StudentLayout({
   const unreadCount = notifications.filter((n) => !n.is_read).length;
 
   return (
-    <div className="min-h-screen flex bg-brand-cream text-brand-dark antialiased">
-      {/* Desktop Fixed Black Sidebar */}
+    <div className="min-h-screen flex bg-slate-50 text-slate-900 antialiased">
+      {/* Desktop Fixed Slate-900 Sidebar */}
       <div className="hidden lg:block shrink-0">
         <QubiteSidebar unreadNotifsCount={unreadCount} />
       </div>
@@ -27,12 +27,12 @@ export default async function StudentLayout({
         <QubiteHeader user={user} notifications={notifications} />
 
         {/* Page Content */}
-        <main className="flex-1 p-5 md:p-8 max-w-7xl w-full mx-auto space-y-6">
+        <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto space-y-8">
           {children}
         </main>
 
         {/* Minimal Footer */}
-        <footer className="border-t border-brand-border bg-white/60 py-4 px-8 text-center text-xs text-zinc-500">
+        <footer className="border-t border-slate-200 bg-white/70 py-4 px-8 text-center text-xs text-slate-500">
           <p>© {new Date().getFullYear()} QuBite (MessMate) • Smart Digital Mess Platform</p>
         </footer>
       </div>

@@ -16,7 +16,7 @@ export function DownloadReceiptButton({ transactionId }: DownloadReceiptButtonPr
     <button
       type="button"
       onClick={handleDownload}
-      className="p-1.5 rounded-xl hover:bg-brand-cream text-zinc-500 hover:text-brand-dark transition-colors"
+      className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors"
       title="Download Receipt"
     >
       <Download className="w-4 h-4" />

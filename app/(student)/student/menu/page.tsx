@@ -4,7 +4,7 @@ import { useState } from "react";
 import { getAllMenus, FOOD_IMAGES } from "@/lib/data/mess-store";
 import { resolveDishImage } from "@/lib/data/dish-images";
 import { formatTime } from "@/lib/utils";
-import { Clock, Flame, Sparkles, Check, X, Calendar as CalendarIcon, Info } from "lucide-react";
+import { Clock, Flame, Sparkles, Check, X, Calendar as CalendarIcon, ShieldCheck, Utensils } from "lucide-react";
 import { submitMealPlanAction } from "@/app/actions/meal-plan-actions";
 import { toast } from "sonner";
 import { MealType, Menu } from "@/lib/types/database";
@@ -18,7 +18,6 @@ const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Sat
  */
 function getTargetDateForWeekday(dayName: string): { dateStr: string; label: string; isToday: boolean } {
   const today = new Date();
-  const todayDayName = today.toLocaleDateString("en-US", { weekday: "long" });
 
   for (let i = 0; i < 7; i++) {
     const candidate = new Date(today);
@@ -120,25 +119,72 @@ export default function StudentWeeklyMenuPage() {
   };
 
   const dayMeals = getDayMeals(activeDay);
-  const activeDayInfo = getTargetDateForWeekday(activeDay);
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div>
-        <div className="flex items-center gap-2 text-brand-dark text-xs font-bold uppercase tracking-wider mb-1">
-          <CalendarIcon className="w-4 h-4 text-brand-yellowHover" /> Weekly Dining Schedule
+    <div className="space-y-8">
+      {/* 1. TOP HERO HEADER ROW: Left Eyebrow+H1+Subtitle, Right compact KPI stat chips */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+            <CalendarIcon className="w-3.5 h-3.5 text-amber-500" />
+            <span>Weekly Dining Schedule</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+            Complete Weekly Mess Menu
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Plan your meals across all seven days with nutritional counts, booking cutoffs, and instant attendance opt-in.
+          </p>
         </div>
-        <h1 className="text-2xl md:text-3xl font-black text-brand-dark tracking-tight">
-          Complete Weekly Mess Menu
-        </h1>
-        <p className="text-xs text-zinc-500 mt-0.5">
-          Plan your meals across all seven days with nutritional counts, booking cutoffs, and instant attendance opt-in.
-        </p>
+
+        {/* Right-aligned compact KPI stat cards */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="bg-white border border-slate-200 rounded-2xl px-4 py-2.5 shadow-sm flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-700 flex items-center justify-center shrink-0">
+              <CalendarIcon className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-slate-900 leading-tight">
+                7 Days Active
+              </p>
+              <p className="text-[10px] text-slate-500 font-medium">
+                Mon – Sun Cycle
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl px-4 py-2.5 shadow-sm flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-emerald-50 border border-emerald-200/60 text-emerald-700 flex items-center justify-center shrink-0">
+              <Utensils className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-slate-900 leading-tight">
+                4 Daily Slots
+              </p>
+              <p className="text-[10px] text-emerald-700 font-medium">
+                Breakfast to Dinner
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl px-4 py-2.5 shadow-sm flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-slate-900 leading-tight">
+                Cutoff Guard
+              </p>
+              <p className="text-[10px] text-slate-500 font-medium">
+                Zero Food Wastage
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Monday to Sunday Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
         {daysOfWeek.map((day) => {
           const isSelected = activeDay === day;
           const info = getTargetDateForWeekday(day);
@@ -147,23 +193,23 @@ export default function StudentWeeklyMenuPage() {
             <button
               key={day}
               onClick={() => setActiveDay(day)}
-              className={`py-2.5 px-4 rounded-2xl font-bold text-xs shrink-0 transition-all flex flex-col items-center gap-0.5 ${
+              className={`py-2.5 px-4 rounded-xl font-semibold text-xs shrink-0 transition-all flex flex-col items-center gap-0.5 ${
                 isSelected
-                  ? "bg-brand-black text-brand-yellow shadow-md scale-[1.02]"
-                  : "bg-white text-zinc-600 border border-brand-border hover:bg-brand-cream hover:text-brand-dark"
+                  ? "bg-slate-900 text-amber-400 shadow-sm"
+                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100/70 hover:text-slate-900"
               }`}
             >
               <div className="flex items-center gap-1.5">
                 <span>{day}</span>
                 {info.isToday && (
-                  <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-extrabold uppercase ${
-                    isSelected ? "bg-brand-yellow text-brand-black" : "bg-emerald-100 text-emerald-800"
+                  <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-bold uppercase ${
+                    isSelected ? "bg-amber-400 text-slate-950" : "bg-emerald-50 text-emerald-700 border border-emerald-200"
                   }`}>
                     Today
                   </span>
                 )}
               </div>
-              <span className={`text-[10px] font-normal ${isSelected ? "text-amber-200" : "text-zinc-400"}`}>
+              <span className={`text-[10px] font-normal ${isSelected ? "text-amber-200" : "text-slate-400"}`}>
                 {info.label}
               </span>
             </button>
@@ -186,18 +232,18 @@ export default function StudentWeeklyMenuPage() {
           return (
             <div
               key={meal.meal_type}
-              className="bg-white rounded-3xl border border-brand-border overflow-hidden shadow-subtle hover:shadow-card transition-all flex flex-col justify-between"
+              className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
             >
               <div>
                 {/* Image */}
-                <div className="relative h-40 w-full overflow-hidden bg-zinc-100">
+                <div className="relative h-40 w-full overflow-hidden bg-slate-100">
                   <img
                     src={heroImage}
                     alt={mealTitle}
                     className="h-full w-full object-cover"
                   />
                   <div className="absolute top-3 left-3">
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-brand-black/85 text-brand-yellow">
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-slate-900/85 text-amber-300 backdrop-blur-xs">
                       {meta.label}
                     </span>
                   </div>
@@ -208,8 +254,8 @@ export default function StudentWeeklyMenuPage() {
                       </span>
                     </div>
                   )}
-                  <div className="absolute bottom-2.5 left-3 bg-black/60 backdrop-blur-xs px-2.5 py-0.5 rounded-lg text-[10px] font-semibold text-white flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-brand-yellow" />
+                  <div className="absolute bottom-2.5 left-3 bg-slate-900/75 backdrop-blur-xs px-2.5 py-0.5 rounded-lg text-[10px] font-medium text-white flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-amber-400" />
                     <span>
                       {formatTime(meal.serving_start_time)} – {formatTime(meal.serving_end_time)}
                     </span>
@@ -219,7 +265,7 @@ export default function StudentWeeklyMenuPage() {
                 {/* Content */}
                 <div className="p-5 space-y-3">
                   <div>
-                    <h3 className="font-extrabold text-base text-brand-dark line-clamp-1">
+                    <h3 className="font-semibold text-base text-slate-900 line-clamp-1">
                       {mealTitle}
                     </h3>
                   </div>
@@ -239,21 +285,21 @@ export default function StudentWeeklyMenuPage() {
                         />
                       ))
                     ) : (
-                      <span className="text-xs text-zinc-400 italic">No dishes listed</span>
+                      <span className="text-xs text-slate-400 italic">No dishes listed</span>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between text-xs pt-2 border-t border-brand-border">
-                    <span className="flex items-center gap-1 text-zinc-500 text-[11px]">
+                  <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100">
+                    <span className="flex items-center gap-1 text-slate-500 text-[11px]">
                       <Flame className="w-3.5 h-3.5 text-amber-500" />
                       {meal.calories || meta.calories} kcal
                     </span>
                     {isVeg ? (
-                      <span className="px-2 py-0.5 rounded-full bg-brand-softGreen text-emerald-800 text-[10px] font-bold">
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-[10px] font-semibold">
                         Pure Veg
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-[10px] font-bold">
+                      <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200/60 text-[10px] font-semibold">
                         Non-Veg
                       </span>
                     )}
@@ -262,17 +308,17 @@ export default function StudentWeeklyMenuPage() {
               </div>
 
               {/* Booking Actions */}
-              <div className="p-4 bg-brand-cream border-t border-brand-border flex items-center justify-between gap-2">
-                <span className="text-[11px] font-bold text-zinc-500">Attendance:</span>
+              <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-2">
+                <span className="text-[11px] font-semibold text-slate-500">Attendance:</span>
                 <div className="flex gap-1.5">
                   <button
                     type="button"
                     disabled={loadingId === meal.id}
                     onClick={() => handleBooking(meal.id, "yes")}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-xs transition-colors ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 shadow-xs transition-colors ${
                       currentPlan === "yes"
-                        ? "bg-brand-yellow text-brand-black ring-2 ring-amber-400"
-                        : "bg-white hover:bg-brand-yellow/30 text-zinc-700 border border-brand-border"
+                        ? "bg-amber-400 text-slate-950 font-bold ring-2 ring-amber-400"
+                        : "bg-white hover:bg-amber-100/70 text-slate-700 border border-slate-200"
                     }`}
                   >
                     <Check className="w-3.5 h-3.5" /> {currentPlan === "yes" ? "Booked" : "Book"}
@@ -281,10 +327,10 @@ export default function StudentWeeklyMenuPage() {
                     type="button"
                     disabled={loadingId === meal.id}
                     onClick={() => handleBooking(meal.id, "no")}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition-colors ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition-colors ${
                       currentPlan === "no"
-                        ? "bg-red-600 text-white shadow-xs"
-                        : "bg-white hover:bg-red-50 text-red-600 border border-brand-border"
+                        ? "bg-rose-600 text-white shadow-xs"
+                        : "bg-white hover:bg-rose-50 text-rose-600 border border-slate-200"
                     }`}
                   >
                     <X className="w-3.5 h-3.5" /> {currentPlan === "no" ? "Skipped" : "Skip"}

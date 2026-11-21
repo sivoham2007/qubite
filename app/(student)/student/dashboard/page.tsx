@@ -11,7 +11,7 @@ import { MealAttendanceChart } from "@/components/student/attendance-chart";
 import { QuickActionsCard } from "@/components/student/quick-actions-card";
 import { RecentActivityCard } from "@/components/student/recent-activity-card";
 import { PromotionalBanner } from "@/components/student/promotional-banner";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Sparkles, TrendingUp, Wallet } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -25,14 +25,12 @@ export default async function StudentDashboardPage() {
   const complaints = user ? getComplaintsFromStore(user.id) : [];
   const pendingComplaints = complaints.filter((c) => c.status !== "Resolved").length;
 
-  // Time-of-day dynamic greeting
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
 
   const studentFirstName = user?.full_name?.split(" ")[0] || "Aarav";
 
-  // Date and Week metrics
   const now = new Date();
   const formattedDate = now.toLocaleDateString("en-US", {
     weekday: "long",
@@ -41,61 +39,92 @@ export default async function StudentDashboardPage() {
     year: "numeric",
   });
 
-  // Calculate day of year & approximate week of year
   const startOfYear = new Date(now.getFullYear(), 0, 1);
   const dayNumber = Math.floor((now.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24)) + 1;
   const weekNumber = Math.ceil(dayNumber / 7);
 
   return (
-    <div className="space-y-7 pb-6">
-      {/* SECTION 3.C: WELCOME SECTION */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 md:p-8 rounded-3xl border border-brand-border shadow-subtle">
-        <div className="space-y-1">
-          <h1 className="text-2xl md:text-3xl font-black text-brand-dark tracking-tight">
+    <div className="space-y-8 pb-6">
+      {/* 1. TOP HERO HEADER ROW: Left Eyebrow+H1+Subtitle, Right compact KPI stat chips */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <span>Student Mess Portal</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
             {greeting}, {studentFirstName}! 👋
           </h1>
-          <p className="text-xs md:text-sm text-zinc-500 font-medium">
-            Here&apos;s what&apos;s happening in your mess today.
+          <p className="text-sm text-slate-500 mt-1">
+            Here&apos;s what&apos;s happening in your mess today at Central Mess Hall 1.
           </p>
         </div>
 
-        {/* Right Side: Current Date, Week Number, Day Number */}
-        <div className="flex items-center gap-3 bg-brand-cream border border-brand-border px-4 py-2.5 rounded-2xl shrink-0">
-          <div className="h-9 w-9 rounded-xl bg-brand-yellow text-brand-black flex items-center justify-center font-bold">
-            <CalendarIcon className="w-5 h-5" />
+        {/* Right-aligned compact KPI stat cards */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="bg-white border border-slate-200 rounded-2xl px-4 py-2.5 shadow-sm flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-700 flex items-center justify-center shrink-0">
+              <CalendarIcon className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-slate-900 leading-tight">
+                {formattedDate}
+              </p>
+              <p className="text-[10px] text-slate-500 font-medium">
+                Week {weekNumber} • Day {dayNumber}
+              </p>
+            </div>
           </div>
-          <div className="text-left">
-            <p className="text-xs font-extrabold text-brand-dark leading-tight">
-              {formattedDate}
-            </p>
-            <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-semibold mt-0.5">
-              <span>Week {weekNumber}</span>
-              <span>•</span>
-              <span>Day {dayNumber}</span>
+
+          <div className="bg-white border border-slate-200 rounded-2xl px-4 py-2.5 shadow-sm flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-emerald-50 border border-emerald-200/60 text-emerald-700 flex items-center justify-center shrink-0">
+              <TrendingUp className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-slate-900 leading-tight">
+                82% Turnout
+              </p>
+              <p className="text-[10px] text-emerald-700 font-medium">
+                +2% vs Last Week
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl px-4 py-2.5 shadow-sm flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center shrink-0">
+              <Wallet className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-slate-900 leading-tight">
+                ₹{user?.wallet_balance ?? 450}
+              </p>
+              <p className="text-[10px] text-slate-500 font-medium">
+                Dining Balance
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* SECTION 3.D: STATISTICS CARDS */}
+      {/* 2. STATS OVERVIEW CARDS */}
       <QubiteStatCards
         walletBalance={user?.wallet_balance ?? 450}
         pendingComplaintsCount={pendingComplaints > 0 ? pendingComplaints : 1}
       />
 
-      {/* SECTION 3.E: TODAY'S MENU SECTION */}
+      {/* 3. TODAY'S MENU SECTION */}
       <TodaysMenuCard menus={todayMenus} />
 
-      {/* SECTION 3.F & 3.G: MEAL ATTENDANCE & QUICK ACTIONS */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <MealAttendanceChart />
-        <QuickActionsCard />
-      </div>
-
-      {/* SECTION 3.H & 3.I: RECENT ACTIVITY & PROMOTIONAL BANNER */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecentActivityCard activities={activities} />
-        <PromotionalBanner />
+      {/* 4. ASYMMETRIC GRID: 8 columns (Attendance & Timeline) + 4 columns (Quick Actions & Banner) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-8 space-y-6">
+          <MealAttendanceChart />
+          <RecentActivityCard activities={activities} />
+        </div>
+        <div className="lg:col-span-4 space-y-6">
+          <QuickActionsCard />
+          <PromotionalBanner />
+        </div>
       </div>
     </div>
   );

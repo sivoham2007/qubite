@@ -19,18 +19,18 @@ export function MealAttendanceChart() {
   const data = getWeeklyAttendanceChartData(range);
 
   return (
-    <div className="bg-white rounded-3xl p-6 border border-brand-border shadow-subtle flex flex-col justify-between">
+    <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
       {/* Header with Title and Range Dropdown */}
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-xl bg-brand-yellow/30 text-brand-dark flex items-center justify-center">
-            <BarChart2 className="w-4 h-4 text-amber-700" />
+        <div className="flex items-center gap-2.5">
+          <div className="h-8 w-8 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-700 flex items-center justify-center">
+            <BarChart2 className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="font-extrabold text-base text-brand-dark tracking-tight">
+            <h3 className="font-semibold text-base text-slate-900 tracking-tight">
               Meal Attendance
             </h3>
-            <p className="text-[11px] text-zinc-400">Weekly student turnout rate</p>
+            <p className="text-[11px] text-slate-500">Weekly student turnout rate</p>
           </div>
         </div>
 
@@ -39,13 +39,13 @@ export function MealAttendanceChart() {
           <select
             value={range}
             onChange={(e) => setRange(e.target.value as any)}
-            className="appearance-none bg-brand-cream border border-brand-border rounded-xl px-3 py-1.5 pr-7 text-xs font-bold text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-yellow cursor-pointer"
+            className="appearance-none bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 pr-7 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
           >
             <option value="This Week">This Week</option>
             <option value="Last Week">Last Week</option>
             <option value="This Month">This Month</option>
           </select>
-          <ChevronDown className="w-3.5 h-3.5 text-zinc-400 absolute right-2.5 top-2.5 pointer-events-none" />
+          <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none" />
         </div>
       </div>
 
@@ -53,10 +53,10 @@ export function MealAttendanceChart() {
       <div className="h-56 w-full pt-2">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F5EFE6" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
             <XAxis
               dataKey="day"
-              tick={{ fontSize: 11, fill: "#777777", fontWeight: 600 }}
+              tick={{ fontSize: 11, fill: "#64748B", fontWeight: 600 }}
               axisLine={false}
               tickLine={false}
             />
@@ -64,7 +64,7 @@ export function MealAttendanceChart() {
               domain={[0, 100]}
               ticks={[0, 25, 50, 75, 100]}
               unit="%"
-              tick={{ fontSize: 10, fill: "#999999" }}
+              tick={{ fontSize: 10, fill: "#94A3B8" }}
               axisLine={false}
               tickLine={false}
             />
@@ -73,13 +73,13 @@ export function MealAttendanceChart() {
                 if (active && payload && payload.length) {
                   const item = payload[0].payload;
                   return (
-                    <div className="bg-brand-black text-white px-3 py-2 rounded-xl text-xs shadow-floating border border-zinc-800">
-                      <p className="font-bold text-brand-yellow">{item.day}</p>
-                      <p className="text-[11px] text-zinc-300">
+                    <div className="bg-slate-900 text-white px-3 py-2 rounded-xl text-xs shadow-lg border border-slate-800">
+                      <p className="font-bold text-amber-400">{item.day}</p>
+                      <p className="text-[11px] text-slate-300">
                         Attendance: <span className="font-bold text-white">{item.attendance}%</span>
                       </p>
                       {item.isToday && (
-                        <span className="text-[9px] uppercase tracking-wider font-extrabold text-brand-yellow mt-0.5 block">
+                        <span className="text-[9px] uppercase tracking-wider font-bold text-amber-400 mt-0.5 block">
                           ● Today
                         </span>
                       )}
@@ -89,13 +89,13 @@ export function MealAttendanceChart() {
                 return null;
               }}
             />
-            <Bar dataKey="attendance" radius={[8, 8, 0, 0]} maxBarSize={36}>
+            <Bar dataKey="attendance" radius={[6, 6, 0, 0]} maxBarSize={36}>
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={entry.isToday ? "#FFC83D" : "#FFD66B"}
-                  stroke={entry.isToday ? "#151515" : "none"}
-                  strokeWidth={entry.isToday ? 2 : 0}
+                  fill={entry.isToday ? "#FBBF24" : "#FDE68A"}
+                  stroke={entry.isToday ? "#D97706" : "none"}
+                  strokeWidth={entry.isToday ? 1.5 : 0}
                   className="hover:opacity-90 transition-opacity"
                 />
               ))}
@@ -105,12 +105,12 @@ export function MealAttendanceChart() {
       </div>
 
       {/* Legend & Summary Footer */}
-      <div className="pt-3 border-t border-brand-border flex items-center justify-between text-[11px] text-zinc-500 font-medium">
+      <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-brand-yellow border border-brand-black" />
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 border border-amber-500" />
           <span>Highlighted: Today</span>
         </div>
-        <span className="font-bold text-brand-dark">Avg: 84% turn-out</span>
+        <span className="font-semibold text-slate-900">Avg: 84% turn-out</span>
       </div>
     </div>
   );

@@ -20,32 +20,31 @@ export function QubiteStatCards({
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
         {/* CARD 1 – MEALS THIS MONTH */}
-        <div className="bg-white rounded-3xl p-5 border border-brand-border shadow-subtle hover:shadow-card transition-all flex flex-col justify-between">
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Meals This Month
             </span>
-            <div className="h-10 w-10 rounded-2xl bg-brand-softOrange text-brand-dark flex items-center justify-center">
-              <UtensilsCrossed className="w-5 h-5 text-amber-700" />
+            <div className="h-9 w-9 rounded-xl bg-amber-50 text-amber-700 border border-amber-200/60 flex items-center justify-center">
+              <UtensilsCrossed className="w-4 h-4" />
             </div>
           </div>
 
           <div className="my-3">
-            <div className="text-2xl md:text-3xl font-extrabold text-brand-dark tracking-tight">
-              18 <span className="text-base text-zinc-400 font-semibold">/ 22</span>
+            <div className="text-2xl font-bold text-slate-900 tracking-tight">
+              18 <span className="text-sm text-slate-400 font-semibold">/ 22</span>
             </div>
-            <p className="text-[11px] text-zinc-400 mt-0.5">Scheduled mess meals consumed</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Scheduled mess meals consumed</p>
           </div>
 
-          {/* Yellow Progress Bar: 82% */}
           <div className="space-y-1.5 pt-1">
-            <div className="flex items-center justify-between text-[11px] font-bold">
-              <span className="text-zinc-500">Attendance Rate</span>
-              <span className="text-brand-dark">82%</span>
+            <div className="flex items-center justify-between text-[11px] font-semibold">
+              <span className="text-slate-500">Attendance Rate</span>
+              <span className="text-slate-900 font-bold">82%</span>
             </div>
-            <div className="h-2 w-full bg-[#F5EFE6] rounded-full overflow-hidden">
+            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
               <div
-                className="h-full bg-brand-yellow rounded-full transition-all duration-500"
+                className="h-full bg-amber-400 rounded-full transition-all duration-500"
                 style={{ width: "82%" }}
               />
             </div>
@@ -53,28 +52,28 @@ export function QubiteStatCards({
         </div>
 
         {/* CARD 2 – CURRENT BALANCE */}
-        <div className="bg-white rounded-3xl p-5 border border-brand-border shadow-subtle hover:shadow-card transition-all flex flex-col justify-between">
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Current Balance
             </span>
-            <div className="h-10 w-10 rounded-2xl bg-brand-softGreen text-emerald-800 flex items-center justify-center">
-              <Wallet className="w-5 h-5 text-emerald-700" />
+            <div className="h-9 w-9 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex items-center justify-center">
+              <Wallet className="w-4 h-4" />
             </div>
           </div>
 
           <div className="my-3">
-            <div className="text-2xl md:text-3xl font-extrabold text-brand-dark tracking-tight">
+            <div className="text-2xl font-bold text-slate-900 tracking-tight">
               ₹{walletBalance}
             </div>
-            <p className="text-[11px] text-emerald-600 font-semibold mt-0.5">
-              ● Active Dining Credit
+            <p className="text-[11px] text-emerald-700 font-medium mt-0.5 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Active Dining Credit
             </p>
           </div>
 
           <button
             onClick={() => setTopUpOpen(true)}
-            className="w-full py-2 px-3 rounded-xl bg-brand-dark hover:bg-black text-brand-yellow text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+            className="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Top Up</span>
@@ -82,21 +81,21 @@ export function QubiteStatCards({
         </div>
 
         {/* CARD 3 – AVERAGE RATING */}
-        <div className="bg-white rounded-3xl p-5 border border-brand-border shadow-subtle hover:shadow-card transition-all flex flex-col justify-between">
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Average Rating
             </span>
-            <div className="h-10 w-10 rounded-2xl bg-brand-softPurple text-purple-800 flex items-center justify-center">
-              <Star className="w-5 h-5 text-purple-700 fill-purple-700" />
+            <div className="h-9 w-9 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200/60 flex items-center justify-center">
+              <Star className="w-4 h-4 fill-indigo-600" />
             </div>
           </div>
 
           <div className="my-3">
-            <div className="text-2xl md:text-3xl font-extrabold text-brand-dark tracking-tight flex items-baseline gap-1">
-              4.6 <span className="text-base text-zinc-400 font-semibold">/ 5</span>
+            <div className="text-2xl font-bold text-slate-900 tracking-tight flex items-baseline gap-1">
+              4.6 <span className="text-sm text-slate-400 font-semibold">/ 5</span>
             </div>
-            <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 mt-0.5">
+            <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-700 mt-0.5">
               <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>+0.2 vs last week</span>
             </div>
@@ -104,42 +103,41 @@ export function QubiteStatCards({
 
           <Link
             href="/student/feedback"
-            className="w-full py-2 px-3 rounded-xl bg-[#F5EFE6] hover:bg-brand-yellow/30 text-brand-dark text-xs font-bold flex items-center justify-center gap-1 transition-colors"
+            className="w-full py-2 px-3 rounded-xl bg-slate-100/80 hover:bg-amber-100 text-slate-800 text-xs font-medium flex items-center justify-center gap-1 transition-colors"
           >
             Rate Served Food
           </Link>
         </div>
 
         {/* CARD 4 – PENDING COMPLAINTS */}
-        <div className="bg-white rounded-3xl p-5 border border-brand-border shadow-subtle hover:shadow-card transition-all flex flex-col justify-between">
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Pending Complaints
             </span>
-            <div className="h-10 w-10 rounded-2xl bg-brand-softRed text-red-700 flex items-center justify-center">
-              <AlertCircle className="w-5 h-5 text-red-600" />
+            <div className="h-9 w-9 rounded-xl bg-rose-50 text-rose-700 border border-rose-200/60 flex items-center justify-center">
+              <AlertCircle className="w-4 h-4" />
             </div>
           </div>
 
           <div className="my-3">
-            <div className="text-2xl md:text-3xl font-extrabold text-brand-dark tracking-tight">
+            <div className="text-2xl font-bold text-slate-900 tracking-tight">
               {pendingComplaintsCount}
             </div>
-            <p className="text-[11px] text-amber-700 font-semibold mt-0.5">
-              Ticket #C-104 In Progress
+            <p className="text-[11px] text-amber-700 font-medium mt-0.5 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Ticket #C-104 In Progress
             </p>
           </div>
 
           <Link
             href="/student/complaints"
-            className="w-full py-2 px-3 rounded-xl bg-[#F5EFE6] hover:bg-brand-softRed text-brand-dark text-xs font-bold flex items-center justify-center gap-1 transition-colors"
+            className="w-full py-2 px-3 rounded-xl bg-slate-100/80 hover:bg-rose-50 hover:text-rose-700 text-slate-800 text-xs font-medium flex items-center justify-center gap-1 transition-colors"
           >
             View Ticket Status
           </Link>
         </div>
       </div>
 
-      {/* Top Up Modal */}
       <TopUpModal open={topUpOpen} onOpenChange={setTopUpOpen} currentBalance={walletBalance} />
     </>
   );
