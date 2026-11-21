@@ -181,6 +181,7 @@ export default function StudentWeeklyMenuPage() {
             : resolveDishImage(meal.meal_type, meal.image_url || meta.url);
           const mealTitle = meal.items && meal.items.length > 0 ? meal.items.map(i => i.name).slice(0, 2).join(" + ") : meta.desc;
           const currentPlan = userBookings[meal.id] || (meal as Menu).user_meal_plan?.status || null;
+          const isVeg = meal.items && meal.items.length > 0 ? meal.items.every(i => i.is_vegetarian !== false) : true;
 
           return (
             <div
@@ -247,9 +248,15 @@ export default function StudentWeeklyMenuPage() {
                       <Flame className="w-3.5 h-3.5 text-amber-500" />
                       {meal.calories || meta.calories} kcal
                     </span>
-                    <span className="px-2 py-0.5 rounded-full bg-brand-softGreen text-emerald-800 text-[10px] font-bold">
-                      Pure Veg
-                    </span>
+                    {isVeg ? (
+                      <span className="px-2 py-0.5 rounded-full bg-brand-softGreen text-emerald-800 text-[10px] font-bold">
+                        Pure Veg
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-[10px] font-bold">
+                        Non-Veg
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

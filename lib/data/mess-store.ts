@@ -45,25 +45,25 @@ export const FOOD_IMAGES: Record<MealType, { url: string; label: string; desc: s
   breakfast: {
     url: DISH_IMAGE_CATALOG.idli.url,
     label: "Breakfast",
-    desc: "Idli + Chutney",
+    desc: "Idli, Dosa & Parathas",
     calories: 340,
   },
   lunch: {
-    url: DISH_IMAGE_CATALOG.rice.url,
+    url: DISH_IMAGE_CATALOG.rice_sambar.url,
     label: "Lunch",
-    desc: "Rice + Sambar",
+    desc: "Steamed Rice + Sambar & Meals",
     calories: 580,
   },
   snacks: {
-    url: DISH_IMAGE_CATALOG.tea.url,
+    url: DISH_IMAGE_CATALOG.samosa.url,
     label: "Evening Snacks",
-    desc: "Masala Tea + Biscuit",
+    desc: "Samosa, Rolls & Masala Tea",
     calories: 210,
   },
   dinner: {
-    url: DISH_IMAGE_CATALOG.paneer.url,
+    url: DISH_IMAGE_CATALOG.paneer_naan.url,
     label: "Dinner",
-    desc: "Roti + Paneer Curry",
+    desc: "Paneer Butter Masala with Naan",
     calories: 620,
   },
 };
@@ -204,27 +204,43 @@ function generateInitialSeed(): MessStoreState {
     { type: "dinner", cutoff: "17:00:00", start: "19:30:00", end: "21:30:00" },
   ];
 
-  const dishCatalog: Record<MealType, { name: string; desc: string; cat: any }[]> = {
+  // 28 Dishes From The Master Mess Food Chart Organized by Meal Category
+  const weeklyDishSchedule: Record<MealType, { name: string; desc: string; cat: any; is_veg: boolean; image_url: string }[]> = {
     breakfast: [
-      { name: "Idli with Coconut & Tomato Chutney", desc: "Steamed fluffy rice cakes", cat: "main" },
-      { name: "Medu Vada & Sambar", desc: "Crispy lentil donuts", cat: "side" },
-      { name: "Filter Coffee / Tea", desc: "Hot brewed South Indian filter coffee", cat: "beverage" },
+      { name: "Idli with Coconut & Tomato Chutney", desc: "Steamed fluffy rice-lentil cakes served with sambar and fresh chutney", cat: "main", is_veg: true, image_url: "/images/dishes/idli.jpg" },
+      { name: "Crispy Plain Dosa", desc: "Golden thin crepe made from fermented batter served with sambar", cat: "main", is_veg: true, image_url: "/images/dishes/dosa.jpg" },
+      { name: "Golden Masala Dosa", desc: "Crispy crepe stuffed with fragrant spiced potato filling", cat: "main", is_veg: true, image_url: "/images/dishes/masala_dosa.jpg" },
+      { name: "Rava Vegetable Upma", desc: "Tempered semolina porridge cooked with seasonal vegetables and mustard seeds", cat: "main", is_veg: true, image_url: "/images/dishes/upma.jpg" },
+      { name: "Ghee Ven Pongal with Cashews", desc: "Creamy rice and moong dal tempered with roasted cashews, pepper and cumin in ghee", cat: "main", is_veg: true, image_url: "/images/dishes/pongal.jpg" },
+      { name: "Puffed Poori with Potato Sagu", desc: "Golden deep-fried puffed breads served with spiced potato sagu", cat: "bread", is_veg: true, image_url: "/images/dishes/poori.jpg" },
+      { name: "Aloo Paratha with Melting Butter", desc: "Whole-wheat flatbread stuffed with spiced potatoes topped with butter", cat: "bread", is_veg: true, image_url: "/images/dishes/aloo_paratha.jpg" },
     ],
     lunch: [
-      { name: "Steamed Rice with Sambar", desc: "Aromatic rice with piping hot vegetable sambar", cat: "rice" },
-      { name: "Aloo Gobhi Roast", desc: "Spiced cauliflower and potato dry sabzi", cat: "side" },
-      { name: "Phulka Rotis & Curd", desc: "Whole wheat rotis with fresh plain curd", cat: "bread" },
-      { name: "Crispy Papad & Pickle", desc: "Roasted papad with mixed mango pickle", cat: "side" },
+      { name: "Steamed Rice + Sambar", desc: "Hot steamed rice served with aromatic spiced lentil and vegetable sambar", cat: "rice", is_veg: true, image_url: "/images/dishes/rice_sambar.jpg" },
+      { name: "Curd Rice", desc: "Cool seasoned rice blended with fresh yogurt and tempered with mustard seeds", cat: "rice", is_veg: true, image_url: "/images/dishes/curd_rice.jpg" },
+      { name: "Vegetable Pulav", desc: "Fragrant basmati rice gently spiced and cooked with garden fresh vegetables", cat: "rice", is_veg: true, image_url: "/images/dishes/veg_pulav.jpg" },
+      { name: "Amritsari Chana Masala", desc: "Tender chickpeas simmered in a robust, tangy onion-tomato-spice gravy", cat: "main", is_veg: true, image_url: "/images/dishes/chana_masala.jpg" },
+      { name: "Dal Rice", desc: "Comforting steamed rice paired with wholesome yellow dal tadka", cat: "rice", is_veg: true, image_url: "/images/dishes/dal_rice.jpg" },
+      { name: "Fragrant Chicken Biryani", desc: "Rich and flavorful basmati rice layered with tender marinated chicken and aromatics", cat: "rice", is_veg: false, image_url: "/images/dishes/chicken_biryani.jpg" },
+      { name: "Coastal Spiced Fish Curry", desc: "Fresh fish fillets simmered in a tangy spiced coconut-tamarind gravy", cat: "main", is_veg: false, image_url: "/images/dishes/fish_curry.jpg" },
     ],
     snacks: [
-      { name: "Masala Chai", desc: "Fragrant ginger and cardamom spiced hot tea", cat: "beverage" },
-      { name: "Osmania Biscuits & Samosa", desc: "Crisp potato pea samosa with butter biscuits", cat: "snack" },
+      { name: "Crispy Potato Samosa", desc: "Flaky pastry cones filled with spicy potato and green peas masala", cat: "snack", is_veg: true, image_url: "/images/dishes/samosa.jpg" },
+      { name: "Golden Spiced Aloo Bonda", desc: "Crispy chickpea flour batter-fried spiced potato balls", cat: "snack", is_veg: true, image_url: "/images/dishes/aloo_bonda.jpg" },
+      { name: "Crispy Vegetable Cutlet", desc: "Golden-crumbed savoury patties made with mixed vegetables and spices", cat: "snack", is_veg: true, image_url: "/images/dishes/veg_cutlet.jpg" },
+      { name: "Tangy Masala Corn Chat", desc: "Sweet golden corn tossed with chaat masala, lime, onions, and coriander", cat: "snack", is_veg: true, image_url: "/images/dishes/corn_chat.jpg" },
+      { name: "Hot Spiced Masala Tea", desc: "Freshly brewed hot milk tea infused with crushed ginger and cardamom", cat: "beverage", is_veg: true, image_url: "/images/dishes/masala_tea.jpg" },
+      { name: "Kolkata Egg Roll", desc: "Crisp flaky paratha wrapped with fried egg, crisp onions, and tangy sauce", cat: "snack", is_veg: false, image_url: "/images/dishes/egg_roll.jpg" },
+      { name: "Crispy Spicy Chicken 65", desc: "Deep-fried spicy chicken bites seasoned with red chilies, garlic, and curry leaves", cat: "snack", is_veg: false, image_url: "/images/dishes/chicken_65.jpg" },
     ],
     dinner: [
-      { name: "Tawa Roti with Paneer Curry", desc: "Fresh butter rotis with rich cottage cheese curry", cat: "main" },
-      { name: "Yellow Dal Tadka", desc: "Tempered lentils with cumin and garlic", cat: "side" },
-      { name: "Jeera Pulao", desc: "Fragrant cumin tempered basmati rice", cat: "rice" },
-      { name: "Gulab Jamun", desc: "Warm sweet milk dumplings in sugar syrup", cat: "dessert" },
+      { name: "Chapati with Dal", desc: "Soft whole wheat chapatis served with homestyle spiced yellow dal", cat: "bread", is_veg: true, image_url: "/images/dishes/chapati_dal.jpg" },
+      { name: "Paneer Butter Masala with Naan", desc: "Soft cottage cheese cubes in rich butter gravy served with crisp tandoori naan", cat: "main", is_veg: true, image_url: "/images/dishes/paneer_naan.jpg" },
+      { name: "Indo-Chinese Veg Fried Rice", desc: "Wok-tossed long-grain rice with finely diced vegetables and soy seasoning", cat: "rice", is_veg: true, image_url: "/images/dishes/veg_fried_rice.jpg" },
+      { name: "Mixed Vegetable Curry", desc: "Medley of seasonal vegetables simmered in a spiced onion-tomato curry", cat: "main", is_veg: true, image_url: "/images/dishes/mixed_veg_curry.jpg" },
+      { name: "Fresh Plain Curd", desc: "Cool set whole milk yogurt, soothing and probiotic", cat: "side", is_veg: true, image_url: "/images/dishes/curd.jpg" },
+      { name: "Homestyle Chicken Curry", desc: "Tender chicken pieces simmered in an aromatic spiced gravy with onions and tomatoes", cat: "main", is_veg: false, image_url: "/images/dishes/chicken_curry.jpg" },
+      { name: "Boiled Egg Curry with Gravy", desc: "Boiled eggs simmered in a luscious onion-tomato masala gravy", cat: "main", is_veg: false, image_url: "/images/dishes/egg_curry.jpg" },
     ],
   };
 
@@ -242,12 +258,13 @@ function generateInitialSeed(): MessStoreState {
     targetDate.setDate(today.getDate() + offset);
     const dateStr = targetDate.toISOString().split("T")[0];
     const isPast = offset < 0;
+    const dayOfWeek = (targetDate.getDay() + 6) % 7; // Monday=0, Sunday=6
 
     mealSchedules.forEach((sched) => {
       const menuId = `menu-${dateStr}-${sched.type}`;
       const foodMeta = FOOD_IMAGES[sched.type];
-      const dishes = dishCatalog[sched.type];
-      const primaryDishImg = dishes.length > 0 ? resolveDishImage(dishes[0].name, null, dishes[0].cat) : foodMeta.url;
+      const primaryDish = weeklyDishSchedule[sched.type][dayOfWeek];
+      const dishes = [primaryDish];
 
       const menu: Menu = {
         id: menuId,
@@ -257,7 +274,7 @@ function generateInitialSeed(): MessStoreState {
         serving_start_time: sched.start,
         serving_end_time: sched.end,
         is_published: true,
-        image_url: primaryDishImg,
+        image_url: primaryDish.image_url,
         special_badge: sched.type === "dinner" ? "Chef's Special" : undefined,
         calories: foodMeta.calories,
         created_at: new Date(targetDate.getTime() - 86400000 * 2).toISOString(),
@@ -272,8 +289,8 @@ function generateInitialSeed(): MessStoreState {
           name: dish.name,
           description: dish.desc,
           category: dish.cat,
-          is_vegetarian: true,
-          image_url: resolveDishImage(dish.name, null, dish.cat),
+          is_vegetarian: dish.is_veg,
+          image_url: dish.image_url,
           created_at: menu.created_at,
         });
       });

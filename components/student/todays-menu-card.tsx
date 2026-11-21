@@ -108,6 +108,8 @@ export function TodaysMenuCard({ menus }: TodaysMenuCardProps) {
               : resolveDishImage(type, meal.image_url || meta.url);
             const mealTitle = meal.items && meal.items.length > 0 ? meal.items.map(i => i.name).slice(0, 2).join(" + ") : meta.desc;
 
+            const isVeg = meal.items && meal.items.length > 0 ? meal.items.every(i => i.is_vegetarian !== false) : true;
+
             return (
               <div
                 key={type}
@@ -150,9 +152,15 @@ export function TodaysMenuCard({ menus }: TodaysMenuCardProps) {
                       <Flame className="w-3 h-3 text-amber-500" />
                       {meta.calories} kcal
                     </span>
-                    <span className="font-semibold text-emerald-700 bg-brand-softGreen px-2 py-0.5 rounded-full">
-                      Pure Veg
-                    </span>
+                    {isVeg ? (
+                      <span className="font-semibold text-emerald-700 bg-brand-softGreen px-2 py-0.5 rounded-full">
+                        Pure Veg
+                      </span>
+                    ) : (
+                      <span className="font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">
+                        Non-Veg
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
