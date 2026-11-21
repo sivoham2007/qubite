@@ -17,6 +17,7 @@ import {
   Headphones,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { QubiteLogo } from "@/components/shared/qubite-logo";
 
 interface QubiteSidebarProps {
   unreadNotifsCount?: number;
@@ -42,9 +43,7 @@ export function QubiteSidebar({ unreadNotifsCount = 0 }: QubiteSidebarProps) {
       {/* Brand Header */}
       <div className="p-6 pb-5">
         <Link href="/student/dashboard" className="flex items-center gap-3 group">
-          <div className="h-11 w-11 rounded-2xl bg-brand-yellow text-brand-black flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-            <Utensils className="h-6 w-6 stroke-[2.5]" />
-          </div>
+          <QubiteLogo size="md" className="group-hover:scale-105 transition-transform" />
           <div>
             <div className="flex items-center gap-1.5">
               <h1 className="font-extrabold text-xl text-white tracking-tight">

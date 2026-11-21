@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { QubiteLogo } from "@/components/shared/qubite-logo";
 
 interface QubiteHeaderProps {
   user: Profile | null;
@@ -36,8 +37,16 @@ export function QubiteHeader({ user, notifications = [] }: QubiteHeaderProps) {
   );
 
   return (
-    <header className="h-20 bg-brand-cream border-b border-brand-border px-6 md:px-8 flex items-center justify-between sticky top-0 z-30">
-      {/* Left: Large Search Bar */}
+    <header className="h-20 bg-brand-cream border-b border-brand-border px-4 sm:px-6 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-3">
+      {/* Mobile Brand Logo */}
+      <div className="lg:hidden flex items-center shrink-0">
+        <Link href="/student/dashboard" className="flex items-center gap-1.5 group">
+          <QubiteLogo size="xs" />
+          <span className="font-extrabold text-sm text-brand-dark group-hover:text-amber-800 transition-colors">QuBite</span>
+        </Link>
+      </div>
+
+      {/* Left: Search Bar */}
       <div className="w-full max-w-md">
         <div className="relative">
           <Search className="w-4 h-4 text-zinc-400 absolute left-4 top-3.5" />

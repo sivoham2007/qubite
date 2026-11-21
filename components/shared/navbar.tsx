@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Utensils, LogOut, User, Calendar, Star, LayoutDashboard } from "lucide-react";
+import { LogOut, User, Calendar, Star, LayoutDashboard } from "lucide-react";
 import { NotificationBell } from "@/components/shared/notification-bell";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "@/app/actions/auth-actions";
 import { Profile, Notification } from "@/lib/types/database";
+import { QubiteLogo } from "@/components/shared/qubite-logo";
 
 interface NavbarProps {
   user: Profile | null;
@@ -22,12 +23,10 @@ export function Navbar({ user, notifications = [] }: NavbarProps) {
         <div className="flex items-center gap-6">
           <Link
             href={isStudent ? "/student/dashboard" : "/admin/dashboard"}
-            className="flex items-center gap-2.5 font-bold text-slate-900 text-lg tracking-tight"
+            className="flex items-center gap-2.5 font-extrabold text-slate-900 text-lg tracking-tight hover:opacity-95 transition-opacity"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
-              <Utensils className="h-5 w-5" />
-            </div>
-            <span>Smart<span className="text-emerald-600">Mess</span></span>
+            <QubiteLogo size="sm" />
+            <span>Qu<span className="text-amber-500">Bite</span></span>
           </Link>
 
           {/* Student Desktop Nav Links */}

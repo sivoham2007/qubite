@@ -26,7 +26,7 @@ QuBite was crafted from the ground up to break away from generic college dashboa
 ## 📱 Student Dashboard Architecture
 
 1. **A. Left Fixed Dark Sidebar (`#151515`)**:
-   - Brand header with fork/spoon identity, **MessMate** logo & *"Eat • Track • Manage"* tagline.
+   - Official **QuBite** Q-shaped culinary cloche brand logo & *"Eat • Track • Manage"* tagline.
    - 9 accessible navigation views:
      - 📊 `Dashboard` (`/student/dashboard`)
      - 📅 `Weekly Menu` (`/student/menu`)

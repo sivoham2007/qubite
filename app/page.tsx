@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
+import { QubiteLogo } from "@/components/shared/qubite-logo";
 
 export default function LandingPage() {
   const features = [
@@ -59,11 +60,9 @@ export default function LandingPage() {
       <header className="border-b border-brand-border bg-white/80 backdrop-blur-md sticky top-0 z-30">
         <div className="container mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3 font-black text-xl text-brand-dark tracking-tight">
-            <div className="h-10 w-10 rounded-2xl bg-brand-yellow text-brand-black flex items-center justify-center shadow-sm">
-              <Utensils className="h-5 w-5 stroke-[2.5]" />
-            </div>
+            <QubiteLogo size="md" />
             <div>
-              <span>QuBite</span>
+              <span>Qu<span className="text-amber-500">Bite</span></span>
               <span className="text-[10px] block font-bold text-zinc-400 uppercase tracking-widest -mt-1">
                 Eat • Track • Manage
               </span>

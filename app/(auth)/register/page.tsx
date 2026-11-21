@@ -21,6 +21,7 @@ import {
   sendRegistrationOtpAction,
   verifyOtpAndRegisterAction,
 } from "@/app/actions/auth-actions";
+import { QubiteLogo } from "@/components/shared/qubite-logo";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -178,9 +179,9 @@ export default function RegisterPage() {
         <div className="text-center space-y-2">
           <Link
             href="/"
-            className="inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-brand-yellow text-brand-black shadow-md hover:scale-105 transition-transform"
+            className="inline-block hover:scale-105 transition-transform"
           >
-            <Utensils className="h-7 w-7 stroke-[2.5]" />
+            <QubiteLogo size="xl" />
           </Link>
           <h1 className="text-2xl font-black text-brand-dark tracking-tight">
             QuBite Student Registration
