@@ -1,7 +1,8 @@
 import { getCurrentUser } from "@/app/actions/auth-actions";
 import { getWalletDataForStudent } from "@/lib/data/mess-store";
-import { Wallet, ArrowDownRight, ArrowUpRight, Download, CreditCard, Sparkles } from "lucide-react";
+import { Wallet, ArrowDownRight, ArrowUpRight, CreditCard, Sparkles } from "lucide-react";
 import { TopUpModalButton } from "@/components/student/topup-modal-button";
+import { DownloadReceiptButton } from "@/components/student/download-receipt-button";
 
 export const dynamic = "force-dynamic";
 
@@ -135,13 +136,7 @@ export default async function StudentPaymentsPage() {
                     </td>
 
                     <td className="py-3.5 px-3 text-right">
-                      <button
-                        onClick={() => alert(`Downloading receipt for transaction ${tx.id}...`)}
-                        className="p-1.5 rounded-xl hover:bg-brand-cream text-zinc-500 hover:text-brand-dark transition-colors"
-                        title="Download Receipt"
-                      >
-                        <Download className="w-4 h-4" />
-                      </button>
+                      <DownloadReceiptButton transactionId={tx.id} />
                     </td>
                   </tr>
                 );
